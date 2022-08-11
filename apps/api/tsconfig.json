@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "esNext",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "strict": true,
+    "outDir": "../../dist/server",
+    "baseUrl": "./src"
+  },
+  "include": ["./src"],
+  "files": ["./types.d.ts"]
+}
