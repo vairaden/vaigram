@@ -5,11 +5,12 @@ import mongoose from "mongoose";
 import path from "path";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorMiddleware";
-import apiRoutes from "./routes/apiRoutes";
+
+import imageRoutes from "./routes/imageRoutes";
 import commentRoutes from "./routes/commentRoutes";
 import postRoutes from "./routes/postRoutes";
 import userRoutes from "./routes/userRoutes";
-import tokenRoutes from "./routes/tokenRoutes";
+import authRoutes from "./routes/authRoutes";
 
 require("dotenv").config({ path: path.join(__dirname, ".", ".env") });
 
@@ -28,11 +29,11 @@ app.use(fileUpload());
 
 app.use(express.static(path.join(__dirname, "..", "client")));
 
-app.use("/api", apiRoutes);
-app.use("/api/posts", postRoutes);
+app.use("/api/images", imageRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/comments", commentRoutes);
-app.use("/api/tokens", tokenRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/posts/:postId/comments", commentRoutes);
+app.use("/api/auth", authRoutes);
 
 app.use("*", (req: Request, res: Response) => {
   res.status(200).sendFile(path.join(__dirname, "..", "client", "index.html"));

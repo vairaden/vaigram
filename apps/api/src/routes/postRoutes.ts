@@ -5,16 +5,16 @@ import protect from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
-router.get("/multiple_posts", postController.getMultiplePosts);
+router.get("/", postController.getMultiplePosts);
 
-router.get("/one_post", postController.getPostById);
+router.get("/:postId", postController.getPostById);
 
-router.post("/create_post", protect, postController.createPost);
+router.post("/", protect, postController.createPost);
 
-router.patch("/like_post", protect, postController.likePost);
+router.post("/:postId/likes", protect, postController.likePost);
 
-router.patch("/delete_post_like", protect, postController.deletePostLike);
+router.delete("/:postId/like", protect, postController.deletePostLike);
 
-router.delete("/delete_post", protect, postController.deletePostById);
+router.delete("/:postId", protect, postController.deletePostById);
 
 export default router;

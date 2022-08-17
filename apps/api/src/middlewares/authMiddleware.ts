@@ -1,4 +1,4 @@
-import { ITokenPayload } from "dtos/apiInterfaces";
+import { ITokenPayload } from "dtos";
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";

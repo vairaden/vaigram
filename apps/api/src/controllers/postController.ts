@@ -44,7 +44,7 @@ const createPost = asyncHandler(async (req: Request, res: Response) => {
       description: req.body.description,
     });
 
-    const filePath = path.join(__dirname, "..", "data", "images", document.id.toString());
+    const filePath = path.join(__dirname, "..", "..", "uploads", document.id.toString());
 
     await image.mv(filePath);
 

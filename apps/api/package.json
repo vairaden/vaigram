@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "nodemon ./src/index.ts",
     "lint": "eslint .",
-    "build": "cp ./src/.env ../../dist/server/ && tsc",
+    "build": "cp ./src/.env ./dist && tsc",
     "start": "node ./dist/index.js"
   },
   "dependencies": {

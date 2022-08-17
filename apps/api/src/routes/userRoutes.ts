@@ -5,18 +5,14 @@ import protect from "../middlewares/authMiddleware";
 
 const router = express.Router();
 
-router.post("/register", userController.registerUser);
+router.post("/", userController.registerUser);
 
-router.post("/login", userController.loginUser);
+router.get("/:userId", protect, userController.getProfile);
 
-router.get("/logout", protect, userController.logoutUser);
+router.post("/:userId/following", protect, userController.followUser);
 
-router.get("/profile", protect, userController.getProfile);
+router.delete("/:userId/following", protect, userController.unfollowUser);
 
-router.patch("/follow_user", protect, userController.followUser);
-
-router.patch("/unfollow_user", protect, userController.unfollowUser);
-
-router.delete("/delete_user", protect, userController.deleteUser);
+router.delete("/", protect, userController.deleteUser);
 
 export default router;
