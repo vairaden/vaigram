@@ -19,16 +19,6 @@ const Register: NextPage = () => {
       setRegisterError(() => "Passwords are not the same");
       return;
     }
-
-    dispatch(
-      register({
-        username,
-        firstName,
-        lastName,
-        email,
-        password,
-      })
-    );
   }
 
   return (

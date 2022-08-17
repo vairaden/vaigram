@@ -3,14 +3,9 @@ import Link from "next/link";
 import { FormEvent } from "react";
 
 const Login: NextPage = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
   async function submitLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    dispatch(login(data));
-    navigate("/home");
   }
 
   return (

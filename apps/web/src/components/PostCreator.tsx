@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createPost } from "../api/postApi";
 
-interface IProps {
-  postAddedCallback: () => void;
-}
-
-const PostCreator: FC<IProps> = ({ postAddedCallback }) => {
-  const user = useAppSelector((state) => state.auth.user);
+const PostCreator: FC = () => {
   const [creatorOpened, setCreatorOpened] = useState<boolean>(false);
 
   const [postImageList, setPostImageList] = useState<FileList | null>(null);
@@ -14,6 +11,12 @@ const PostCreator: FC<IProps> = ({ postAddedCallback }) => {
 
   const [postDescription, setPostDescription] = useState<string>("");
   const [postDescriptionValid, setPostDescriptionValid] = useState<boolean>(true);
+
+  const queryClient = useQueryClient();
+
+  const addPost = useMutation((data: FormData) => createPost(data), {
+    onSuccess: () => queryClient.invalidateQueries(["posts"]),
+  });
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -30,10 +33,7 @@ const PostCreator: FC<IProps> = ({ postAddedCallback }) => {
 
     const data = new FormData(event.currentTarget);
 
-    createPost(data).then(() => {
-      setCreatorOpened(() => false);
-      postAddedCallback();
-    });
+    addPost.mutate(data);
   }
 
   function openCreatorToggle() {
@@ -41,12 +41,12 @@ const PostCreator: FC<IProps> = ({ postAddedCallback }) => {
   }
 
   return (
-    <>
-      <button type="button" onClick={openCreatorToggle}>
+    <div className="flex-col align-center">
+      <button type="button" onClick={openCreatorToggle} className="bg-orange-400">
         {creatorOpened ? "Close" : "New post"}
       </button>
       {creatorOpened &&
-        (user ? (
+        (true ? (
           <form onSubmit={handleSubmit} encType="multipart/form-data">
             <label>
               Choose image
@@ -61,6 +61,7 @@ const PostCreator: FC<IProps> = ({ postAddedCallback }) => {
             <label>
               Description
               <textarea
+                className="block"
                 name="description"
                 onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
                   setPostDescription(e.target.value)
@@ -76,7 +77,7 @@ const PostCreator: FC<IProps> = ({ postAddedCallback }) => {
             <Link href="/login">Login</Link>
           </>
         ))}
-    </>
+    </div>
   );
 };
 

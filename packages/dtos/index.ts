@@ -1,3 +1,7 @@
+export interface ITokenPayload {
+  userId: string;
+}
+
 export interface RegisterUserRequest {
   username: string;
   firstName: string;
