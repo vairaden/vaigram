@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { FC } from "react";
 import { refreshAccess } from "../api/authApi";
@@ -11,8 +11,8 @@ const Navbar: FC = () => {
   const { isLoading, error, data } = useQuery(["user"], () => refreshAccess());
 
   return (
-    <nav className="bg-orange-400 dark:bg-black">
-      <div className="mx-auto w-96 p-2 flex justify-between bg-orange-400 dark:bg-black">
+    <nav className="transition-colors duration-300 bg-orange-400 dark:bg-black">
+      <div className="transition-colors duration-300 mx-auto w-96 p-2 flex justify-between bg-orange-400 dark:bg-black">
         <Link href="/">
           <a>
             <h1 className="text-center mr-auto">Vaigram</h1>

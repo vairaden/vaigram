@@ -26,7 +26,6 @@ const protect = asyncHandler(async (req: Request, res: Response, next: Function)
       res.status(401);
     }
   }
-  // res.status(500).json({ message: "No auth token" });
 });
 
 export default protect;

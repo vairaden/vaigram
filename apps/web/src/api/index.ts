@@ -5,13 +5,16 @@ const api = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
 });
 
-api.interceptors.request.use(async (config: AxiosRequestConfig) => {
-  if (!config.headers) throw new Error("No headers");
+api.interceptors.request.use(
+  async (config: AxiosRequestConfig) => {
+    if (!config.headers) throw new Error("No headers");
 
-  config.headers.authorization = `Bearer ${sessionStorage.getItem("accessToken")}`;
+    config.headers.authorization = `Bearer ${sessionStorage.getItem("accessToken")}`;
 
-  return config;
-});
+    return config;
+  },
+  (error: any) => Promise.reject(error)
+);
 
 api.interceptors.response.use(
   (res: AxiosResponse) => res,
@@ -31,7 +34,7 @@ api.interceptors.response.use(
       return api.request(originalRequest);
     }
 
-    throw error;
+    Promise.reject(error);
   }
 );
 

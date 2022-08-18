@@ -1,11 +1,9 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 
-function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
-  // res.status(500).json({
-  // message: err.message,
-  // });
-
-  next();
+function errorHandler(err: Error, req: Request, res: Response) {
+  res.status(400).json({
+    message: "Unknown route",
+  });
 }
 
 export default errorHandler;

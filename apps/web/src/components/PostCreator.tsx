@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createPost } from "../api/postApi";
 import Image from "next/image";
 import Button from "./Button";
+import { refreshAccess } from "../api/authApi";
+import { motion } from "framer-motion";
 
 const PostCreator: FC = () => {
   const [creatorOpened, setCreatorOpened] = useState<boolean>(false);
@@ -11,7 +13,7 @@ const PostCreator: FC = () => {
   const [postDescription, setPostDescription] = useState<string>("");
 
   const queryClient = useQueryClient();
-
+  const { isLoading, error, data: user } = useQuery(["user"], () => refreshAccess());
   const addPost = useMutation((data: FormData) => createPost(data), {
     onSuccess: () => queryClient.invalidateQueries(["posts"]),
   });
@@ -27,14 +29,22 @@ const PostCreator: FC = () => {
     data.append("description", postDescription);
     addPost.mutate(data);
   }
+  const verticalSlide = {
+    open: { height: "auto", clipPath: "polygon(0 0, 0 100%, 100% 100%, 100% 0)" },
+    closed: { height: 0, clipPath: "polygon(0 0, 0 0, 100% 0, 100% 0)" },
+  };
 
   return (
     <section className="flex flex-col">
       <Button onClick={() => setCreatorOpened((prev) => !prev)}>
         {creatorOpened ? "Close" : "New post"}
       </Button>
-      {creatorOpened &&
-        (true ? ( //! User
+      <motion.div
+        transition={{ type: "tween" }}
+        animate={creatorOpened ? "open" : "closed"}
+        variants={verticalSlide}
+      >
+        {user ? (
           <form
             onSubmit={handleSubmit}
             encType="multipart/form-data"
@@ -54,14 +64,20 @@ const PostCreator: FC = () => {
                 }}
               />
             </label>
-            {postImage && (
-              <Image
-                src={URL.createObjectURL(postImage)}
-                width="400px"
-                height="400px"
-                alt="Selected image"
-              />
-            )}
+            <motion.div
+              transition={{ type: "tween" }}
+              animate={postImage ? "open" : "closed"}
+              variants={verticalSlide}
+            >
+              {postImage && (
+                <Image
+                  src={URL.createObjectURL(postImage)}
+                  width="400px"
+                  height="400px"
+                  alt="Selected image"
+                />
+              )}
+            </motion.div>
             <label>
               Description
               <textarea
@@ -77,9 +93,12 @@ const PostCreator: FC = () => {
         ) : (
           <>
             <p>You are not logged in</p>
-            <Link href="/login">Login</Link>
+            <Link href="/login">
+              <a>Login</a>
+            </Link>
           </>
-        ))}
+        )}
+      </motion.div>
     </section>
   );
 };

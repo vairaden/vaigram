@@ -56,7 +56,7 @@ const getProfile = asyncHandler(async (req: Request, res: Response) => {
       createdAt: user.createdAt,
     });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -72,7 +72,7 @@ const followUser = asyncHandler(async (req: Request, res: Response) => {
 
     res.status(200).json({ message: `${user.username} is following ${othUser.username} now` });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -90,7 +90,7 @@ const unfollowUser = asyncHandler(async (req: Request, res: Response) => {
 
     res.status(200).json({ message: `${user.username} is not following ${othUser.username} now` });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -107,7 +107,7 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
       .clearCookie("refreshToken", { httpOnly: true })
       .json({ message: "User deleted" });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 

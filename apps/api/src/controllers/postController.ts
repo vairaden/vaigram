@@ -19,17 +19,17 @@ const getMultiplePosts = asyncHandler(async (req: Request, res: Response) => {
 
     res.status(200).json(posts);
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
 const getPostById = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const post = await PostModel.findById(req.query.postId).populate("author", ["username"]);
+    const post = await PostModel.findById(req.params.postId).populate("author", ["username"]);
 
     res.status(200).json(post);
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -52,7 +52,7 @@ const createPost = asyncHandler(async (req: Request, res: Response) => {
       message: "Post created",
     });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -66,7 +66,7 @@ const likePost = asyncHandler(async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Post liked" });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -78,26 +78,26 @@ const deletePostLike = asyncHandler(async (req: Request, res: Response) => {
 
     PostModel.findByIdAndUpdate(req.postId, { likes: post.likes - 1 });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
 const deletePostById = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const post = await PostModel.findById(req.query.postId).populate("author", ["id"]);
+    const post = await PostModel.findById(req.params.postId).populate("author", ["id"]);
 
     if (!post) throw new Error("Post not found");
     if (post.author.id.toString() !== req.userId) throw new Error("Deletion not authorized");
 
     await PostModel.findByIdAndDelete(post.id);
-    const filePath = path.join(__dirname, "..", "data", "images", post.id.toString());
+    const filePath = path.join(__dirname, "..", "..", "uploads", post.id.toString());
     await fs.unlink(filePath);
 
     await CommentModel.deleteMany({ post: post.id });
 
     res.status(200).json({ message: "Post deleted" });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 

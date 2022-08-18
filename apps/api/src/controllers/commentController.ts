@@ -16,7 +16,7 @@ const getMultipleComments = asyncHandler(async (req: Request, res: Response) => 
 
     res.status(200).json(comments);
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -35,7 +35,7 @@ const createComment = asyncHandler(async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Comment created" });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -47,7 +47,7 @@ const likeComment = asyncHandler(async (req: Request, res: Response) => {
 
     CommentModel.findByIdAndUpdate(req.postId, { likes: comment.likes + 1 });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -59,7 +59,7 @@ const deleteCommentLike = asyncHandler(async (req: Request, res: Response) => {
 
     CommentModel.findByIdAndUpdate(req.postId, { likes: comment.likes - 1 });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 
@@ -69,7 +69,7 @@ const deleteComment = asyncHandler(async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Comment deleted" });
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 

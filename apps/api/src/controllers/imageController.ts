@@ -9,7 +9,7 @@ const getImage = asyncHandler(async (req: Request, res: Response) => {
     await fs.access(filePath);
     res.status(200).sendFile(filePath);
   } catch (err: any) {
-    res.status(500).json({ message: err.message });
+    res.status(400).json({ message: err.message });
   }
 });
 

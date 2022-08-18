@@ -1,7 +1,9 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { IPost } from "dtos";
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
+import { deletePost } from "../api/postApi";
 import Button from "./Button";
 
 interface IProps {
@@ -10,7 +12,16 @@ interface IProps {
 }
 
 const PostCard: FC<IProps> = ({ ref = null, postData }) => {
-  async function handleDelete() {}
+  const queryClient = useQueryClient();
+  const deleteMutation = useMutation(["posts"], () => deletePost(postData.id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts"]);
+    },
+  });
+
+  async function handleDelete() {
+    deleteMutation.mutate();
+  }
 
   return (
     <article className="my-4">
@@ -23,7 +34,7 @@ const PostCard: FC<IProps> = ({ ref = null, postData }) => {
       <div>
         <h3>Author: {postData.author.username}</h3>
         <p>{postData.description}</p>
-        <Link href={`/post/${postData.id}`}>
+        <Link href={`/posts/${postData.id}`}>
           <a>Open</a>
         </Link>
         <Button type="button">Like</Button>
