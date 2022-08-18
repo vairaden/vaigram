@@ -9,7 +9,7 @@ const Layout: FC<IProps> = ({ children }) => {
   return (
     <>
       <Navbar />
-      {children}
+      <main className="p-2 w-96 mx-auto">{children}</main>
     </>
   );
 };

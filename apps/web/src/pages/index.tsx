@@ -26,13 +26,12 @@ const Home: NextPage = () => {
   }
 
   return (
-    <main className="flex-col">
+    <>
       <PostCreator />
-
       {posts.map((post: IPost, index: number) => (
         <PostCard key={post.id} postData={post} />
       ))}
-    </main>
+    </>
   );
 };
 

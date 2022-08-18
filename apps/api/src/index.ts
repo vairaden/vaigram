@@ -1,5 +1,5 @@
 import cors from "cors";
-import express, { Request, Response } from "express";
+import express from "express";
 import fileUpload from "express-fileupload";
 import mongoose from "mongoose";
 import path from "path";
@@ -27,17 +27,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(fileUpload());
 
-app.use(express.static(path.join(__dirname, "..", "client")));
-
 app.use("/api/images", imageRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/posts/:postId/comments", commentRoutes);
 app.use("/api/auth", authRoutes);
-
-app.use("*", (req: Request, res: Response) => {
-  res.status(200).sendFile(path.join(__dirname, "..", "client", "index.html"));
-});
 
 app.use(errorHandler);
 

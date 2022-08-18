@@ -2,15 +2,13 @@ import Link from "next/link";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost } from "../api/postApi";
+import Image from "next/image";
+import Button from "./Button";
 
 const PostCreator: FC = () => {
   const [creatorOpened, setCreatorOpened] = useState<boolean>(false);
-
-  const [postImageList, setPostImageList] = useState<FileList | null>(null);
-  const [imageValid, setImageValid] = useState<boolean>(true);
-
+  const [postImage, setPostImage] = useState<File | null>(null);
   const [postDescription, setPostDescription] = useState<string>("");
-  const [postDescriptionValid, setPostDescriptionValid] = useState<boolean>(true);
 
   const queryClient = useQueryClient();
 
@@ -18,58 +16,59 @@ const PostCreator: FC = () => {
     onSuccess: () => queryClient.invalidateQueries(["posts"]),
   });
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    setCreatorOpened((prev) => !prev);
 
-    if (postImageList === null || postImageList[0] === null) {
-      setImageValid(false);
-      return;
-    }
-
-    if (postDescription.length > 1000) {
-      setPostDescriptionValid(false);
-      return;
-    }
-
-    const data = new FormData(event.currentTarget);
-
+    let data = new FormData();
     addPost.mutate(data);
   }
 
-  function openCreatorToggle() {
-    setCreatorOpened((prev) => !prev);
-  }
-
   return (
-    <div className="flex-col align-center">
-      <button type="button" onClick={openCreatorToggle} className="bg-orange-400">
+    <section className="flex flex-col">
+      <Button onClick={() => setCreatorOpened((prev) => !prev)}>
         {creatorOpened ? "Close" : "New post"}
-      </button>
+      </Button>
       {creatorOpened &&
-        (true ? (
-          <form onSubmit={handleSubmit} encType="multipart/form-data">
-            <label>
-              Choose image
+        (true ? ( //! User
+          <form
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+            className="flex flex-col text-center"
+          >
+            <label className="my-2">
+              <span className="border-2 rounded border-black bg-orange-200 cursor-pointer">
+                Choose image
+              </span>
               <input
+                className="hidden"
                 type="file"
                 accept="image/*"
                 name="postImage"
-                onChange={(e: ChangeEvent<HTMLInputElement>) => setPostImageList(e.target.files)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  setPostImage(e.target.files ? e.target.files[0] : null);
+                }}
               />
             </label>
-            {imageValid || <p>Error</p>}
+            {postImage && (
+              <Image
+                src={URL.createObjectURL(postImage)}
+                width="400px"
+                height="400px"
+                alt="Selected image"
+              />
+            )}
             <label>
               Description
               <textarea
-                className="block"
+                className="block my-2 w-full border-2"
                 name="description"
                 onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
                   setPostDescription(e.target.value)
                 }
               />
             </label>
-            {postDescriptionValid || <p>Error</p>}
-            <button type="submit">Create post</button>
+            <Button>Create post</Button>
           </form>
         ) : (
           <>
@@ -77,7 +76,7 @@ const PostCreator: FC = () => {
             <Link href="/login">Login</Link>
           </>
         ))}
-    </div>
+    </section>
   );
 };
 

@@ -12,13 +12,12 @@ async function getMultiplePosts(limit: number, pageNumber: number) {
 }
 
 async function getOnePost(postId: string) {
-  const res = await api.get<IPost>("/posts/one_post", { params: { postId } });
-
+  const res = await api.get<IPost>(`/posts/${postId}`);
   return res.data;
 }
 
 async function createPost(data: FormData) {
-  const res = await api.post("/posts/create_post", data, {
+  const res = await api.post("/posts", data, {
     headers: {
       "content-type": "multipart/form-data",
     },
@@ -28,17 +27,17 @@ async function createPost(data: FormData) {
 }
 
 async function deletePost(postId: string) {
-  const res = await api.delete("/posts/delete_post", { params: { postId } });
+  const res = await api.delete(`/posts/${postId}`);
   return res.data;
 }
 
 async function likePost(postId: string) {
-  const res = await api.patch("/posts/like_post", undefined, { params: { postId } });
+  const res = await api.post(`/posts/${postId}/likes`);
   return res.data;
 }
 
 async function deletePostLike(postId: string) {
-  const res = await api.patch("/posts/delete_post_like", undefined, { params: { postId } });
+  const res = await api.delete(`/posts/${postId}/likes`);
   return res.data;
 }
 

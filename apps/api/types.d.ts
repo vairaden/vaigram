@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { IPost, IUser } from "dtos/dtos";
+import { IPost, IUser } from "dtos";
 
 declare global {
   namespace Express {

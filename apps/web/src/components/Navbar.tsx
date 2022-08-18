@@ -1,9 +1,31 @@
+import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import { FC } from "react";
+import { refreshAccess } from "../api/authApi";
+import useTheme from "../hooks/useTheme";
+import Button from "./Button";
 
 const Navbar: FC = () => {
+  const [isDarkTheme, setDarkTheme] = useTheme();
+  // const [isLoading, isError, data] = useQuery(["user"], refreshAccess);
+
   return (
-    <nav>
-      <h1 className="text-center">Navbar</h1>
+    <nav className="bg-orange-400 dark:bg-black">
+      <div className="mx-auto w-96 p-2 flex justify-between bg-orange-400 dark:bg-black">
+        <Link href="/">
+          <a>
+            <h1 className="text-center mr-auto">Vaigram</h1>
+          </a>
+        </Link>
+        <div className="space-x-4">
+          <Button onClick={() => setDarkTheme((prev) => !prev)}>
+            {isDarkTheme ? "Dark" : "Light"}
+          </Button>
+          <Link href="/login">
+            <a>Login</a>
+          </Link>
+        </div>
+      </div>
     </nav>
   );
 };
