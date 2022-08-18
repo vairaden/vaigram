@@ -1,4 +1,3 @@
-import { RegisterUserRequest } from "dtos";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
@@ -8,7 +7,7 @@ import tokenService from "../services/tokenService";
 
 const registerUser = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const { username, firstName, lastName, email, password } = req.body as RegisterUserRequest;
+    const { username, firstName, lastName, email, password } = req.body;
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -31,7 +30,11 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
       })
       .json({
         id: user.id,
-        username,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        createdAt: user.createdAt,
         accessToken,
       });
   } catch (err: any) {
@@ -50,8 +53,6 @@ const getProfile = asyncHandler(async (req: Request, res: Response) => {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
-      email: user.email,
-      following: user.following,
       createdAt: user.createdAt,
     });
   } catch (err: any) {

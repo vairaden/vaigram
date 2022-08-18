@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { RegisterUserRequest } from "dtos";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { z } from "zod";
+import { registerValidator } from "validators";
 import { registerUser } from "../api/userApi";
 import Button from "../components/Button";
 import FormInput from "../components/FormInput";
@@ -19,18 +19,16 @@ const Register: NextPage = () => {
   const [password, setPassword] = useState("");
   const [controlPassword, setControlPassword] = useState("");
 
-  const registrationSchema = z.object({
-    username: z.string(),
-    firstName: z.string(),
-    lastName: z.string(),
-    email: z.string().email(),
-    password: z.string(),
-  });
-
   const queryClient = useQueryClient();
-  const register = useMutation((data: RegisterUserRequest) => {
-    return registerUser(data);
-  });
+  const register = useMutation(
+    ["user"],
+    (data: z.infer<typeof registerValidator>) => registerUser(data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["user"]);
+      },
+    }
+  );
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -50,7 +48,7 @@ const Register: NextPage = () => {
     };
 
     try {
-      registrationSchema.parse(data);
+      registerValidator.parse(data);
       register.mutate(data);
       router.push("/");
     } catch (err: any) {
@@ -62,7 +60,7 @@ const Register: NextPage = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="flex flex-col w-96 mx-auto">
+      <form onSubmit={handleSubmit} className="flex flex-col">
         <FormInput
           name="username"
           type="text"

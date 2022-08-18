@@ -3,9 +3,24 @@ import type { AppProps } from "next/app";
 import Layout from "../components/Layout";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useState } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const queryClient = new QueryClient();
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            refetchOnWindowFocus: false,
+            retry: (failureCount: number, error: any) => {
+              if (error.response.status === 401) return false;
+              if (failureCount === 3) return false;
+              return true;
+            },
+          },
+        },
+      })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>

@@ -18,9 +18,13 @@ const PostCreator: FC = () => {
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
+    if (!postImage) return;
+
     setCreatorOpened((prev) => !prev);
 
     let data = new FormData();
+    data.append("postImage", postImage);
+    data.append("description", postDescription);
     addPost.mutate(data);
   }
 

@@ -3,7 +3,6 @@ import asyncHandler from "express-async-handler";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import path from "path";
-import { LoginUserRequest } from "dtos";
 import TokenModel from "../models/tokens";
 import tokenService from "../services/tokenService";
 import UserModel from "../models/users";
@@ -12,7 +11,7 @@ require("dotenv").config({ path: path.join(__dirname, ".", ".env") });
 
 const loginUser = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const { username, password } = req.body as LoginUserRequest;
+    const { username, password } = req.body;
 
     const user = await UserModel.findOne({ username });
 
@@ -30,7 +29,11 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
       })
       .json({
         id: user.id,
-        username,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        createdAt: user.createdAt,
         accessToken,
       });
   } catch (err: any) {
@@ -41,7 +44,6 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
 const logoutUser = asyncHandler(async (req: Request, res: Response) => {
   try {
     const { cookies, userId } = req;
-
     if (!cookies.refreshToken) throw new Error("No cookies");
 
     await tokenService.deleteRefreshToken(userId!);
@@ -67,6 +69,7 @@ const handleRefreshToken = asyncHandler(async (req: Request, res: Response) => {
     if (data === null) throw new Error("No user with such cookie");
 
     const userData = await UserModel.findById(data.userId);
+    if (!userData) throw new Error("User not found");
 
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err: any, payload: any) => {
       if (err || data.userId.toString() !== payload.userId)
@@ -81,7 +84,12 @@ const handleRefreshToken = asyncHandler(async (req: Request, res: Response) => {
           httpOnly: true,
         })
         .json({
-          userData,
+          id: userData.id,
+          username: userData.username,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email: userData.email,
+          createdAt: userData.createdAt,
           accessToken: newTokens.accessToken,
         });
     });

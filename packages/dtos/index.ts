@@ -2,26 +2,12 @@ export interface ITokenPayload {
   userId: string;
 }
 
-export interface RegisterUserRequest {
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-export interface LoginUserRequest {
-  username: string;
-  password: string;
-}
-
 export interface IUser {
   id: string;
   username: string;
   firstName: string;
   lastName: string;
   email: string;
-  following: string[];
   createdAt: Date;
   accessToken: string;
 }

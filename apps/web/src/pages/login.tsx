@@ -1,16 +1,24 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NextPage } from "next";
 import Link from "next/link";
 import { ChangeEvent, FormEvent, useState } from "react";
+import { loginUser } from "../api/authApi";
 import Button from "../components/Button";
 import FormInput from "../components/FormInput";
 
 const Login: NextPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const queryClient = useQueryClient();
+  const login = useMutation(["user"], () => loginUser({ username, password }), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user"]);
+    },
+  });
 
-  async function submitLogin(event: FormEvent<HTMLFormElement>) {
+  function submitLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
+    login.mutate();
   }
 
   return (

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { FC } from "react";
 import { refreshAccess } from "../api/authApi";
@@ -7,7 +7,8 @@ import Button from "./Button";
 
 const Navbar: FC = () => {
   const [isDarkTheme, setDarkTheme] = useTheme();
-  // const [isLoading, isError, data] = useQuery(["user"], refreshAccess);
+
+  const { isLoading, error, data } = useQuery(["user"], () => refreshAccess());
 
   return (
     <nav className="bg-orange-400 dark:bg-black">
@@ -21,9 +22,15 @@ const Navbar: FC = () => {
           <Button onClick={() => setDarkTheme((prev) => !prev)}>
             {isDarkTheme ? "Dark" : "Light"}
           </Button>
-          <Link href="/login">
-            <a>Login</a>
-          </Link>
+          {data ? (
+            <Link href={`/profile`}>
+              <a>{data.username}</a>
+            </Link>
+          ) : (
+            <Link href="/login">
+              <a>Login</a>
+            </Link>
+          )}
         </div>
       </div>
     </nav>
