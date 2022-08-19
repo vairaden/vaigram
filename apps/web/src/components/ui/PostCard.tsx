@@ -3,7 +3,7 @@ import { IPost } from "dtos";
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
-import { deletePost } from "../api/postApi";
+import { deletePost } from "../../api/postApi";
 import Button from "./Button";
 
 interface IProps {

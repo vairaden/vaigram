@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { FC } from "react";
-import { refreshAccess } from "../api/authApi";
-import useTheme from "../hooks/useTheme";
+import { refreshAccess } from "../../api/authApi";
+import useTheme from "../../hooks/useTheme";
 import Button from "./Button";
 
 const Navbar: FC = () => {

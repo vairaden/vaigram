@@ -7,8 +7,8 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { loginValidator } from "validators";
 import { z } from "zod";
 import { loginUser, refreshAccess } from "../api/authApi";
-import Button from "../components/Button";
-import FormInput from "../components/FormInput";
+import Button from "../components/ui/Button";
+import FormInput from "../components/ui/FormInput";
 
 const Login: NextPage = () => {
   const queryClient = useQueryClient();

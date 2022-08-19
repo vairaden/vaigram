@@ -5,8 +5,8 @@ import { ChangeEvent, FormEvent, useState } from "react";
 import { z } from "zod";
 import { registerValidator } from "validators";
 import { registerUser } from "../api/userApi";
-import Button from "../components/Button";
-import FormInput from "../components/FormInput";
+import Button from "../components/ui/Button";
+import FormInput from "../components/ui/FormInput";
 import Head from "next/head";
 
 const Register: NextPage = () => {

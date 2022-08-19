@@ -3,10 +3,10 @@ import type { NextPage } from "next";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getMultiplePosts } from "../api/postApi";
-import PostCard from "../components/PostCard";
-import PostCreator from "../components/PostCreator";
+import PostCard from "../components/ui/PostCard";
+import PostCreator from "../components/ui/PostCreator";
 import Head from "next/head";
-import { AnimatePresence, motion } from "framer-motion";
+import ListItemsAnimation from "../components/animations/ListItemsAnimation";
 
 const Home: NextPage = () => {
   const [pageNumber, setPageNumber] = useState<number>(0);
@@ -30,20 +30,11 @@ const Home: NextPage = () => {
         <>
           <PostCreator />
           <ul>
-            <AnimatePresence mode="popLayout">
+            <ListItemsAnimation>
               {data.map((post: IPost) => (
-                <motion.li
-                  key={post.id}
-                  layout
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.8, opacity: 0 }}
-                  transition={{ type: "spring" }}
-                >
-                  <PostCard postData={post} />
-                </motion.li>
+                <PostCard postData={post} key={post.id} />
               ))}
-            </AnimatePresence>
+            </ListItemsAnimation>
           </ul>
         </>
       )}
