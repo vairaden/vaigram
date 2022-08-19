@@ -7,3 +7,8 @@ export const registerValidator = z.object({
   email: z.string().email(),
   password: z.string(),
 });
+
+export const loginValidator = z.object({
+  username: z.string(),
+  password: z.string(),
+});

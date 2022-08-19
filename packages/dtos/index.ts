@@ -1,7 +1,3 @@
-export interface ITokenPayload {
-  userId: string;
-}
-
 export interface IUser {
   id: string;
   username: string;

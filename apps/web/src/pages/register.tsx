@@ -7,6 +7,7 @@ import { registerValidator } from "validators";
 import { registerUser } from "../api/userApi";
 import Button from "../components/Button";
 import FormInput from "../components/FormInput";
+import Head from "next/head";
 
 const Register: NextPage = () => {
   const router = useRouter();
@@ -20,15 +21,11 @@ const Register: NextPage = () => {
   const [controlPassword, setControlPassword] = useState("");
 
   const queryClient = useQueryClient();
-  const register = useMutation(
-    ["user"],
-    (data: z.infer<typeof registerValidator>) => registerUser(data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["user"]);
-      },
-    }
-  );
+  const register = useMutation((data: z.infer<typeof registerValidator>) => registerUser(data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user"]);
+    },
+  });
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -56,10 +53,11 @@ const Register: NextPage = () => {
     }
   }
 
-  if (registerError) return <main>Error</main>;
-
   return (
     <>
+      <Head>
+        <title>Register</title>
+      </Head>
       <form onSubmit={handleSubmit} className="flex flex-col">
         <FormInput
           name="username"

@@ -1,4 +1,6 @@
 import { IUser } from "dtos";
+import { loginValidator } from "validators";
+import { z } from "zod";
 import api from ".";
 
 async function refreshAccess() {
@@ -8,8 +10,8 @@ async function refreshAccess() {
   return res.data;
 }
 
-async function loginUser(userData: { username: string; password: string }) {
-  const res = await api.post<IUser>("/auth", userData);
+async function loginUser(credentials: z.infer<typeof loginValidator>) {
+  const res = await api.post<IUser>("/auth", credentials);
   sessionStorage.setItem("accessToken", res.data.accessToken);
 
   return res.data;

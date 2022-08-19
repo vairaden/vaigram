@@ -8,7 +8,7 @@ import Button from "./Button";
 const Navbar: FC = () => {
   const [isDarkTheme, setDarkTheme] = useTheme();
 
-  const { isLoading, error, data } = useQuery(["user"], () => refreshAccess());
+  const { data: user } = useQuery(["user"], () => refreshAccess());
 
   return (
     <nav className="transition-colors duration-300 bg-orange-400 dark:bg-black">
@@ -22,9 +22,9 @@ const Navbar: FC = () => {
           <Button onClick={() => setDarkTheme((prev) => !prev)}>
             {isDarkTheme ? "Dark" : "Light"}
           </Button>
-          {data ? (
+          {user ? (
             <Link href={`/profile`}>
-              <a>{data.username}</a>
+              <a>{user.username}</a>
             </Link>
           ) : (
             <Link href="/login">

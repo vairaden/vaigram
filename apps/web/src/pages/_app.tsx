@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           queries: {
             refetchOnWindowFocus: false,
             retry: (failureCount: number, error: any) => {
-              if (error.response.status === 401) return false;
+              if (error.response && error.response.status === 401) return false;
               if (failureCount === 3) return false;
               return true;
             },

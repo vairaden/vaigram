@@ -13,14 +13,14 @@ interface IProps {
 
 const PostCard: FC<IProps> = ({ ref = null, postData }) => {
   const queryClient = useQueryClient();
-  const deleteMutation = useMutation(["posts"], () => deletePost(postData.id), {
+  const deleteMutation = useMutation((postId: string) => deletePost(postId), {
     onSuccess: () => {
       queryClient.invalidateQueries(["posts"]);
     },
   });
 
   async function handleDelete() {
-    deleteMutation.mutate();
+    deleteMutation.mutate(postData.id);
   }
 
   return (
@@ -32,7 +32,7 @@ const PostCard: FC<IProps> = ({ ref = null, postData }) => {
         alt={postData.description}
       />
       <div>
-        <h3>Author: {postData.author.username}</h3>
+        <h2>Author: {postData.author.username}</h2>
         <p>{postData.description}</p>
         <Link href={`/posts/${postData.id}`}>
           <a>Open</a>
