@@ -25,8 +25,24 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
     deleteMutation.mutate(postData.id);
   }
 
+  const unixDate = new Date(postData.createdAt);
+  const date = `${unixDate.getHours()}:${unixDate.getMinutes()} / ${unixDate.getDate()}.${unixDate.getMonth()}.${unixDate.getFullYear()}`;
+
   return (
     <article className="my-4" ref={forwardRef}>
+      <Link href={`users/${postData.author.id}`}>
+        <a className="flex mb-1">
+          <Image
+            className="rounded-[40px]"
+            width="40px"
+            height="40px"
+            src={`${process.env.NEXT_PUBLIC_API_URL}/api/images/${postData.author.profilePicture}`}
+            alt="Profile pic"
+          />
+          <h2 className="p-2">{postData.author.username}</h2>
+          <p className="pt-[14px] text-xs text-gray-600">{date}</p>
+        </a>
+      </Link>
       <Image
         width="400px"
         height="400px"
@@ -34,8 +50,10 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
         alt={postData.description}
       />
       <div>
-        <h2>Author: {postData.author.username}</h2>
-        <p>{postData.description}</p>
+        <p>
+          <strong className="pr-2">{postData.author.username}</strong>
+          {postData.description}
+        </p>
         <Link href={`/posts/${postData.id}`}>
           <a>Open</a>
         </Link>

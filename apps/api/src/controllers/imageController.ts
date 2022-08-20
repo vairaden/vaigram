@@ -4,12 +4,13 @@ import fs from "fs/promises";
 import path from "path";
 
 const getImage = asyncHandler(async (req: Request, res: Response) => {
-  const filePath = path.join(__dirname, "..", "..", "uploads", req.params.id);
   try {
+    const filePath = path.join(__dirname, "..", "..", "uploads", req.params.id);
     await fs.access(filePath);
     res.status(200).sendFile(filePath);
   } catch (err: any) {
-    res.status(400).json({ message: err.message });
+    const filePath = path.join(__dirname, "..", "..", "uploads", "fallback.png");
+    res.status(200).sendFile(filePath);
   }
 });
 

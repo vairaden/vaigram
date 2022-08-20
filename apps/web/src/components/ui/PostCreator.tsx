@@ -6,17 +6,27 @@ import Image from "next/image";
 import Button from "./Button";
 import { refreshAccess } from "../../api/authApi";
 import DropdownAnimation from "../animations/DropdownAnimation";
+import ToggleSwitch from "./ToggleSwitch";
+import { setProfilePicture } from "../../api/userApi";
 
 const PostCreator: FC = () => {
   const queryClient = useQueryClient();
 
-  const [creatorOpened, setCreatorOpened] = useState<boolean>(false);
+  const [creatorOpened, setCreatorOpened] = useState(false);
   const [postImage, setPostImage] = useState<File | null>(null);
-  const [postDescription, setPostDescription] = useState<string>("");
+  const [postDescription, setPostDescription] = useState("");
+  const [profilePic, setProfilePic] = useState(false);
 
   const { data: user } = useQuery(["user"], () => refreshAccess());
   const addPost = useMutation((data: FormData) => createPost(data), {
     onSuccess: () => queryClient.invalidateQueries(["posts"]),
+  });
+
+  const profilePicMutation = useMutation((data: FormData) => setProfilePicture(user!.id, data), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["user"]);
+      queryClient.invalidateQueries(["posts"]);
+    },
   });
 
   function handleSubmit(event: FormEvent) {
@@ -29,12 +39,15 @@ const PostCreator: FC = () => {
     let data = new FormData();
     data.append("postImage", postImage);
     data.append("description", postDescription);
-    addPost.mutate(data);
+
+    if (profilePic) {
+      profilePicMutation.mutate(data);
+    } else {
+      addPost.mutate(data);
+    }
     setPostDescription("");
     setPostImage(null);
   }
-
-  //TODO Set as profile picture toggle
 
   return (
     <section className="flex flex-col">
@@ -81,6 +94,13 @@ const PostCreator: FC = () => {
                 }
               />
             </label>
+            <ToggleSwitch
+              className="p-2"
+              isOn={profilePic}
+              onClick={() => setProfilePic((prev) => !prev)}
+            >
+              Set as profile picture
+            </ToggleSwitch>
             <Button type="submit" className="w-fit mx-auto my-2">
               Create post
             </Button>

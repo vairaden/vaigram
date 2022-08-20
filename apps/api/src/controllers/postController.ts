@@ -24,7 +24,7 @@ const getMultiplePosts = asyncHandler(async (req: Request, res: Response) => {
           createdAt: "descending",
         })
         .limit(limit)
-        .populate("author", ["id", "username"]);
+        .populate("author", ["id", "profilePicture", "username"]);
 
       const hasMore = posts.length === limit;
       const nextCursor = hasMore ? posts[limit - 1].createdAt.toString() : null;
@@ -36,7 +36,7 @@ const getMultiplePosts = asyncHandler(async (req: Request, res: Response) => {
           createdAt: "descending",
         })
         .limit(limit)
-        .populate("author", ["id", "username"]);
+        .populate("author", ["id", "profilePicture", "username"]);
 
       const hasMore = posts.length === limit;
       const nextCursor = hasMore ? posts[limit - 1].createdAt : null;
@@ -50,7 +50,11 @@ const getMultiplePosts = asyncHandler(async (req: Request, res: Response) => {
 
 const getPostById = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const post = await PostModel.findById(req.params.postId).populate("author", ["id", "username"]);
+    const post = await PostModel.findById(req.params.postId).populate("author", [
+      "id",
+      "profilePicture",
+      "username",
+    ]);
 
     res.status(200).json(post);
   } catch (err: any) {

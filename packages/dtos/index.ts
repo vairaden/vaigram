@@ -23,6 +23,7 @@ export interface IPost {
   id: string;
   author: {
     id: string;
+    profilePicture: string | null;
     username: string;
   };
   description: string;
@@ -35,6 +36,7 @@ export interface IComment {
   id: string;
   author: {
     id: string;
+    profilePicture: string | null;
     username: string;
   };
   post: string;
