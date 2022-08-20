@@ -7,12 +7,14 @@ import { deletePost } from "../../api/postApi";
 import Button from "./Button";
 
 interface IProps {
-  ref?: (node: HTMLElement) => void;
   postData: IPost;
+  forwardRef?: (node: HTMLElement) => void;
+  allowDeletion?: boolean;
 }
 
-const PostCard: FC<IProps> = ({ ref = null, postData }) => {
+const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) => {
   const queryClient = useQueryClient();
+
   const deleteMutation = useMutation((postId: string) => deletePost(postId), {
     onSuccess: () => {
       queryClient.invalidateQueries(["posts"]);
@@ -24,7 +26,7 @@ const PostCard: FC<IProps> = ({ ref = null, postData }) => {
   }
 
   return (
-    <article className="my-4">
+    <article className="my-4" ref={forwardRef}>
       <Image
         width="400px"
         height="400px"
@@ -38,9 +40,11 @@ const PostCard: FC<IProps> = ({ ref = null, postData }) => {
           <a>Open</a>
         </Link>
         <Button type="button">Like</Button>
-        <Button type="button" onClick={handleDelete}>
-          Delete
-        </Button>
+        {allowDeletion && (
+          <Button type="button" onClick={handleDelete}>
+            Delete
+          </Button>
+        )}
       </div>
     </article>
   );

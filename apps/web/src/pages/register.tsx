@@ -27,7 +27,7 @@ const Register: NextPage = () => {
     },
   });
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setRegisterError(() => null);
 
@@ -46,7 +46,7 @@ const Register: NextPage = () => {
 
     try {
       registerValidator.parse(data);
-      register.mutate(data);
+      await register.mutateAsync(data);
       router.push("/");
     } catch (err: any) {
       setRegisterError("kek");

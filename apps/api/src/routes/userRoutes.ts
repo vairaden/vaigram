@@ -7,7 +7,9 @@ const router = express.Router();
 
 router.post("/", userController.registerUser);
 
-router.get("/:userId", protect, userController.getProfile);
+router.get("/:userId", userController.getProfile);
+
+router.post("/:userId/profile_picture", protect, userController.setProfilePicture);
 
 router.post("/:userId/following", protect, userController.followUser);
 

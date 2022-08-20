@@ -23,7 +23,7 @@ const Navbar: FC = () => {
             {isDarkTheme ? "Dark" : "Light"}
           </Button>
           {user ? (
-            <Link href={`/profile`}>
+            <Link href={`/users/${user.id}`}>
               <a>{user.username}</a>
             </Link>
           ) : (

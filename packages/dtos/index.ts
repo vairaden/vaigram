@@ -1,5 +1,6 @@
 export interface IUser {
   id: string;
+  profilePicture: string | null;
   username: string;
   firstName: string;
   lastName: string;
@@ -10,6 +11,7 @@ export interface IUser {
 
 export interface IProfile {
   id: string;
+  profilePicture: string | null;
   username: string;
   firstName: string;
   lastName: string;

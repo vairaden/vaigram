@@ -10,14 +10,39 @@ const fs = require("fs").promises;
 
 const getMultiplePosts = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const posts = await PostModel.find()
-      .sort({
-        createdAt: "descending",
-      })
-      .limit(Number(req.query.limit))
-      .populate("author", ["username"]);
+    const limit = Number(req.query.limit);
+    const cursor = req.query.cursor ? req.query.cursor.toString() : null;
+    const authorId = req.query.authorId ? req.query.authorId.toString() : null;
 
-    res.status(200).json(posts);
+    if (cursor) {
+      const posts = await PostModel.find(
+        authorId
+          ? { createdAt: { $lt: new Date(cursor) }, author: authorId }
+          : { createdAt: { $lt: new Date(cursor) } }
+      )
+        .sort({
+          createdAt: "descending",
+        })
+        .limit(limit)
+        .populate("author", ["id", "username"]);
+
+      const hasMore = posts.length === limit;
+      const nextCursor = hasMore ? posts[limit - 1].createdAt.toString() : null;
+
+      res.status(200).json({ posts, nextCursor });
+    } else {
+      const posts = await PostModel.find(authorId ? { author: authorId } : {})
+        .sort({
+          createdAt: "descending",
+        })
+        .limit(limit)
+        .populate("author", ["id", "username"]);
+
+      const hasMore = posts.length === limit;
+      const nextCursor = hasMore ? posts[limit - 1].createdAt : null;
+
+      res.status(200).json({ posts, nextCursor });
+    }
   } catch (err: any) {
     res.status(400).json({ message: err.message });
   }
@@ -25,7 +50,7 @@ const getMultiplePosts = asyncHandler(async (req: Request, res: Response) => {
 
 const getPostById = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const post = await PostModel.findById(req.params.postId).populate("author", ["username"]);
+    const post = await PostModel.findById(req.params.postId).populate("author", ["id", "username"]);
 
     res.status(200).json(post);
   } catch (err: any) {

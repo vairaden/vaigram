@@ -1,6 +1,9 @@
+import path from "path";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
+import { UploadedFile } from "express-fileupload";
+import PostModel from "../models/posts";
 
 import UserModel from "../models/users";
 import tokenService from "../services/tokenService";
@@ -30,6 +33,7 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
       })
       .json({
         id: user.id,
+        profilePicture: user.profilePicture,
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -50,11 +54,36 @@ const getProfile = asyncHandler(async (req: Request, res: Response) => {
 
     res.status(200).json({
       id: user.id,
+      profilePicture: user.profilePicture,
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
       createdAt: user.createdAt,
     });
+  } catch (err: any) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+const setProfilePicture = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    if (!req.files) throw new Error("No file attached");
+    const image: UploadedFile = req.files.postImage as UploadedFile;
+
+    const user = await UserModel.findById(req.userId);
+    if (!user) throw new Error("User not found");
+
+    const post = await PostModel.create({
+      author: req.userId,
+      description: req.body.description,
+    });
+
+    const filePath = path.join(__dirname, "..", "..", "uploads", post.id.toString());
+    await image.mv(filePath);
+
+    await UserModel.findByIdAndUpdate(req.userId, { profilePicture: post.id });
+
+    res.status(200).json({ message: "Profile picture set" });
   } catch (err: any) {
     res.status(400).json({ message: err.message });
   }
@@ -114,6 +143,7 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
 export default {
   registerUser,
   getProfile,
+  setProfilePicture,
   followUser,
   unfollowUser,
   deleteUser,

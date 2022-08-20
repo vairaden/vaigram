@@ -31,9 +31,9 @@ const Login: NextPage = () => {
     router.push("/");
   }
 
-  function submitLogin(event: FormEvent<HTMLFormElement>) {
+  async function submitLogin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    login.mutate({ username, password });
+    await login.mutateAsync({ username, password });
     router.push("/");
   }
 

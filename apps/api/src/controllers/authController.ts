@@ -29,6 +29,7 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
       })
       .json({
         id: user.id,
+        profilePicture: user.profilePicture,
         username: user.username,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -85,6 +86,7 @@ const handleRefreshToken = asyncHandler(async (req: Request, res: Response) => {
         })
         .json({
           id: userData.id,
+          profilePicture: userData.profilePicture,
           username: userData.username,
           firstName: userData.firstName,
           lastName: userData.lastName,

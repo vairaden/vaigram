@@ -1,12 +1,16 @@
 import { IPost } from "dtos";
 import api from "./index";
 
-async function getMultiplePosts(limit: number, pageNumber: number) {
-  const res = await api.get<IPost[]>("/posts", {
-    params: {
-      limit,
-      pageNumber,
-    },
+async function getMultiplePosts(params: {
+  limit: number;
+  cursor: string | null;
+  authorId: string;
+}) {
+  const res = await api.get<{
+    posts: IPost[];
+    nextCursor: string | null;
+  }>("/posts", {
+    params,
   });
   return res.data;
 }

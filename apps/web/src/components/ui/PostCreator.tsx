@@ -34,6 +34,8 @@ const PostCreator: FC = () => {
     setPostImage(null);
   }
 
+  //TODO Set as profile picture toggle
+
   return (
     <section className="flex flex-col">
       <Button onClick={() => setCreatorOpened((prev) => !prev)}>

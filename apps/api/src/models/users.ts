@@ -2,6 +2,7 @@ import { model, Schema, Types } from "mongoose";
 
 interface IMongoUser {
   id: Types.ObjectId;
+  profilePicture: Types.ObjectId;
   username: string;
   firstName: string;
   lastName: string;
@@ -14,6 +15,10 @@ interface IMongoUser {
 
 const UserSchema = new Schema<IMongoUser>(
   {
+    profilePicture: {
+      type: Schema.Types.ObjectId,
+      default: null,
+    },
     username: {
       type: String,
       required: [true, "Please add username"],

@@ -22,6 +22,16 @@ async function getProfile(userId: string) {
   return res;
 }
 
+async function setProfilePicture(userId: string, data: FormData) {
+  const res = await api.post<IProfile>(`/users/${userId}/profile_picture`, data, {
+    headers: {
+      "content-type": "multipart/form-data",
+    },
+  });
+
+  return res;
+}
+
 async function followUser(userId: string, othUserId: string) {
   const res = await api.post<IUser>(`/users/${userId}/following`, { othUserId });
 
@@ -34,4 +44,4 @@ async function unfollowUser(userId: string, othUserId: string) {
   return res;
 }
 
-export { registerUser, deleteUser, getProfile, followUser, unfollowUser };
+export { registerUser, deleteUser, getProfile, setProfilePicture, followUser, unfollowUser };
