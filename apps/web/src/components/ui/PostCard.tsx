@@ -29,8 +29,8 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
   const date = `${unixDate.getHours()}:${unixDate.getMinutes()} / ${unixDate.getDate()}.${unixDate.getMonth()}.${unixDate.getFullYear()}`;
 
   return (
-    <article className="my-4" ref={forwardRef}>
-      <Link href={`users/${postData.author.id}`}>
+    <article className="mb-4" ref={forwardRef}>
+      <Link href={`/users/${postData.author.id}`}>
         <a className="flex mb-1">
           <Image
             className="rounded-[40px]"
@@ -50,10 +50,8 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
         alt={postData.description}
       />
       <div>
-        <p>
-          <strong className="pr-2">{postData.author.username}</strong>
-          {postData.description}
-        </p>
+        <h3 className="pr-2 font-bold inline">{postData.author.username}</h3>
+        <p>{postData.description}</p>
         <Link href={`/posts/${postData.id}`}>
           <a>Open</a>
         </Link>
