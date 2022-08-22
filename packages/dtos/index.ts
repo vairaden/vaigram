@@ -28,6 +28,7 @@ export interface IPost {
   };
   description: string;
   likes: number;
+  dislikes: number;
   createdAt: Date;
   updatedAt: Date;
 }

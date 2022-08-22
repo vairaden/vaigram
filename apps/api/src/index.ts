@@ -30,7 +30,7 @@ app.use(fileUpload());
 app.use("/api/images", imageRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
-app.use("/api/posts/:postId/comments", commentRoutes);
+app.use("/api/posts", commentRoutes);
 app.use("/api/auth", authRoutes);
 
 app.use(errorHandler);

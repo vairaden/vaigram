@@ -13,7 +13,7 @@ router.post("/", protect, postController.createPost);
 
 router.post("/:postId/likes", protect, postController.likePost);
 
-router.delete("/:postId/like", protect, postController.deletePostLike);
+router.delete("/:postId/like", protect, postController.dislikePost);
 
 router.delete("/:postId", protect, postController.deletePostById);
 

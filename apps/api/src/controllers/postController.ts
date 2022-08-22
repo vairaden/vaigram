@@ -87,11 +87,11 @@ const createPost = asyncHandler(async (req: Request, res: Response) => {
 
 const likePost = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const post = await PostModel.findById(req.query.postId);
+    const post = await PostModel.findById(req.params.postId);
 
     if (!post) throw new Error("Post not found");
 
-    await PostModel.findByIdAndUpdate(req.query.postId, { likes: post.likes + 1 });
+    await PostModel.findByIdAndUpdate(req.params.postId, { likes: post.likes + 1 });
 
     res.status(200).json({ message: "Post liked" });
   } catch (err: any) {
@@ -99,13 +99,14 @@ const likePost = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-const deletePostLike = asyncHandler(async (req: Request, res: Response) => {
+const dislikePost = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const post = await PostModel.findById(req.query.postId);
+    const post = await PostModel.findById(req.params.postId);
 
     if (!post) throw new Error("Post not found");
 
-    PostModel.findByIdAndUpdate(req.postId, { likes: post.likes - 1 });
+    PostModel.findByIdAndUpdate(req.params.postId, { dislikes: post.dislikes + 1 });
+    res.status(200).json({ message: "Post disliked" });
   } catch (err: any) {
     res.status(400).json({ message: err.message });
   }
@@ -135,6 +136,6 @@ export default {
   getPostById,
   createPost,
   likePost,
-  deletePostLike,
+  dislikePost,
   deletePostById,
 };

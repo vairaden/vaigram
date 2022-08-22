@@ -1,34 +1,27 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { IPost } from "dtos";
+import { IComment } from "dtos";
 import { FC, useCallback, useMemo, useRef } from "react";
-import { getMultiplePosts } from "../../api/postApi";
-import PostCard from "./PostCard";
+import { getMultipleComments } from "../../api/commentApi";
 
 interface IProps {
   limit: number;
   pagesToKeep?: number;
-  authorId?: string;
-  allowPostDeletion?: boolean;
+  postId: string;
 }
 
-const PostList: FC<IProps> = ({
-  limit,
-  pagesToKeep = null,
-  authorId = null,
-  allowPostDeletion = false,
-}) => {
+const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
   const queryClient = useQueryClient();
 
   const { isLoading, data, error, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    ["posts", authorId],
-    ({ pageParam = { limit, cursor: null, authorId } }) => getMultiplePosts(pageParam),
+    ["posts", postId],
+    ({ pageParam = { postId, limit, cursor: null } }) => getMultipleComments(pageParam),
     {
       getNextPageParam: (lastPage) =>
         lastPage.nextCursor
           ? {
+              postId,
               limit,
               cursor: lastPage.nextCursor,
-              authorId,
             }
           : undefined,
     }
@@ -43,7 +36,7 @@ const PostList: FC<IProps> = ({
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage) {
-          queryClient.setQueryData(["posts", authorId], (data: any) =>
+          queryClient.setQueryData(["posts", postId], (data: any) =>
             data.pages.length === pagesToKeep
               ? {
                   pages: data.pages.slice(1),
@@ -56,17 +49,17 @@ const PostList: FC<IProps> = ({
       });
       if (node) observer.current.observe(node);
     },
-    [fetchNextPage, hasNextPage, isLoading, pagesToKeep, authorId, queryClient]
+    [fetchNextPage, hasNextPage, isLoading, pagesToKeep, postId, queryClient]
   );
 
-  const posts = useMemo(() => {
-    let postList: IPost[] = [];
+  const comments = useMemo(() => {
+    let commentList: IComment[] = [];
     if (data) {
       for (let page of data.pages) {
-        postList = [...postList, ...page.posts];
+        commentList = [...commentList, ...page.comments];
       }
     }
-    return postList;
+    return commentList;
   }, [data]);
 
   return (
@@ -77,19 +70,11 @@ const PostList: FC<IProps> = ({
         <h2>Error connecting to server</h2>
       ) : (
         <ul>
-          {posts.map((post, index) =>
-            index + 1 === posts.length ? (
-              <li key={post.id}>
-                <PostCard
-                  forwardRef={lastPostRef}
-                  postData={post}
-                  allowDeletion={allowPostDeletion}
-                />
-              </li>
+          {comments.map((comment, index) =>
+            index + 1 === comments.length ? (
+              <li key={comment.id}>{comment.content}</li>
             ) : (
-              <li key={post.id}>
-                <PostCard postData={post} allowDeletion={allowPostDeletion} />
-              </li>
+              <li key={comment.content}></li>
             )
           )}
         </ul>
@@ -97,5 +82,4 @@ const PostList: FC<IProps> = ({
     </>
   );
 };
-
-export default PostList;
+export default CommentList;

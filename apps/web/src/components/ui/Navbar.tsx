@@ -49,7 +49,7 @@ const Navbar: FC = () => {
         closeCallback={() => setCreatorOpened((prev) => !prev)}
       />
       <motion.nav
-        animate={navVisible ? "visible" : "hidden"}
+        animate={navVisible || creatorOpened ? "visible" : "hidden"}
         variants={navVariants}
         initial={{ translateX: "-50%" }}
         className="fixed left-[50%] z-10 w-[23rem] py-2 px-4

@@ -5,6 +5,7 @@ interface IMongoPost {
   author: Types.ObjectId;
   description: string;
   likes: number;
+  dislikes: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,6 +23,11 @@ const PostSchema = new Schema<IMongoPost>(
       default: "",
     },
     likes: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    dislikes: {
       type: Number,
       required: true,
       default: 0,

@@ -12,3 +12,5 @@ export const loginValidator = z.object({
   username: z.string(),
   password: z.string(),
 });
+
+export const commentValidator = z.string().max(1000);

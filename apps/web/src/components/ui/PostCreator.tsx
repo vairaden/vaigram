@@ -33,7 +33,7 @@ const PostCreator: FC<IProps> = ({ isOpened, closeCallback }) => {
     },
   });
 
-  function handleSubmit(event: FormEvent) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!postImage) return;
     if (postDescription.length === 0) return;
@@ -55,7 +55,7 @@ const PostCreator: FC<IProps> = ({ isOpened, closeCallback }) => {
   return (
     <section className="flex flex-col fixed z-30 left-[50%] translate-x-[-50%] translate-y-16">
       <DropdownAnimation isOpen={isOpened}>
-        <div className="border-black border-2 rounded-[20px] bg-white overflow-hidden w-[23rem]">
+        <div className="border-black border-2 rounded-lg bg-white overflow-hidden w-[23rem]">
           {user ? (
             <form
               onSubmit={handleSubmit}
