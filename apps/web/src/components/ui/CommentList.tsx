@@ -2,6 +2,7 @@ import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { IComment } from "dtos";
 import { FC, useCallback, useMemo, useRef } from "react";
 import { getMultipleComments } from "../../api/commentApi";
+import CommentCard from "./CommentCard";
 
 interface IProps {
   limit: number;
@@ -13,7 +14,7 @@ const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
   const queryClient = useQueryClient();
 
   const { isLoading, data, error, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    ["posts", postId],
+    ["comments", postId],
     ({ pageParam = { postId, limit, cursor: null } }) => getMultipleComments(pageParam),
     {
       getNextPageParam: (lastPage) =>
@@ -28,7 +29,7 @@ const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
   );
 
   const observer = useRef<IntersectionObserver | null>(null);
-  const lastPostRef = useCallback(
+  const lastCommentRef = useCallback(
     (node: HTMLElement) => {
       if (isLoading) return;
 
@@ -36,7 +37,7 @@ const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage) {
-          queryClient.setQueryData(["posts", postId], (data: any) =>
+          queryClient.setQueryData(["comments", postId], (data: any) =>
             data.pages.length === pagesToKeep
               ? {
                   pages: data.pages.slice(1),
@@ -69,12 +70,16 @@ const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
       ) : error || !data ? (
         <h2>Error connecting to server</h2>
       ) : (
-        <ul>
+        <ul className="mt-2">
           {comments.map((comment, index) =>
             index + 1 === comments.length ? (
-              <li key={comment.id}>{comment.content}</li>
+              <li key={comment.id}>
+                <CommentCard commentData={comment} forwardRef={lastCommentRef} />
+              </li>
             ) : (
-              <li key={comment.content}></li>
+              <li key={comment.content}>
+                <CommentCard commentData={comment} />
+              </li>
             )
           )}
         </ul>

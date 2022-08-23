@@ -26,14 +26,18 @@ const Post: NextPage = () => {
         <h2>Error</h2>
       ) : (
         <>
-          <Image
-            width="400px"
-            height="400px"
-            src={`${process.env.NEXT_PUBLIC_API_URL}/api/images/${data.id}`}
-            alt={data.description}
-          />
-          <CommentCreator postId={id} />
-          <CommentList limit={5} postId={id} />
+          <article>
+            <Image
+              width="400px"
+              height="400px"
+              src={`${process.env.NEXT_PUBLIC_API_URL}/api/images/${data.id}`}
+              alt={data.description}
+            />
+          </article>
+          <section>
+            <CommentCreator postId={id} />
+            <CommentList limit={5} postId={id} />
+          </section>
         </>
       )}
     </>

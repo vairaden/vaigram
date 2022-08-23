@@ -32,28 +32,12 @@ const Navbar: FC = () => {
 
   return (
     <>
-      <AnimatePresence>
-        {creatorOpened && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.2 }}
-            exit={{ opacity: 0 }}
-            transition={{ type: "tween" }}
-            onClick={() => setCreatorOpened(false)}
-            className="fixed z-20 w-[100%] h-[100%] left-0 top-0 bg-black"
-          ></motion.div>
-        )}
-      </AnimatePresence>
-      <PostCreator
-        isOpened={creatorOpened}
-        closeCallback={() => setCreatorOpened((prev) => !prev)}
-      />
       <motion.nav
         animate={navVisible || creatorOpened ? "visible" : "hidden"}
         variants={navVariants}
         initial={{ translateX: "-50%" }}
         className="fixed left-[50%] z-10 w-[23rem] py-2 px-4
-      flex justify-between rounded-[200px] bg-orange-400 dark:bg-black transition-colors duration-300"
+        flex justify-between rounded-[200px] bg-orange-400 dark:bg-black transition-colors duration-300"
       >
         <Link href="/">
           <a>
@@ -78,6 +62,23 @@ const Navbar: FC = () => {
           )}
         </div>
       </motion.nav>
+      <div className="h-14"></div>
+      <PostCreator
+        isOpened={creatorOpened}
+        closeCallback={() => setCreatorOpened((prev) => !prev)}
+      />
+      <AnimatePresence>
+        {creatorOpened && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.2 }}
+            exit={{ opacity: 0 }}
+            transition={{ type: "tween" }}
+            onClick={() => setCreatorOpened(false)}
+            className="fixed z-20 w-[100%] h-[100%] left-0 top-0 bg-black"
+          ></motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

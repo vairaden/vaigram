@@ -31,7 +31,7 @@ const CommentCreator: FC<IParams> = ({ postId }) => {
   }
 
   return (
-    <section className="flex flex-col border-black border-2 rounded-lg bg-white overflow-hidden w-[23rem]">
+    <div className="flex flex-col border-black border-2 rounded-lg bg-white overflow-hidden w-[23rem]">
       {user ? (
         <form
           onSubmit={handleSubmit}
@@ -59,7 +59,7 @@ const CommentCreator: FC<IParams> = ({ postId }) => {
           </Link>
         </div>
       )}
-    </section>
+    </div>
   );
 };
 export default CommentCreator;

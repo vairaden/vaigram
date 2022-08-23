@@ -34,7 +34,9 @@ const Profile: NextPage = () => {
         <h2>Not logged in</h2>
       ) : (
         <>
-          <Button onClick={handleLogout}>Logout</Button>
+          <section>
+            <Button onClick={handleLogout}>Logout</Button>
+          </section>
           <PostList limit={4} authorId={userId} allowPostDeletion />
         </>
       )}
