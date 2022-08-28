@@ -6,6 +6,7 @@ interface IMongoComment {
   post: Types.ObjectId;
   content: string;
   likes: number;
+  dislikes: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,6 +29,11 @@ const CommentSchema = new Schema<IMongoComment>(
       default: "",
     },
     likes: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    dislikes: {
       type: Number,
       required: true,
       default: 0,

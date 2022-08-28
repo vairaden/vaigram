@@ -40,9 +40,12 @@ export interface IComment {
     profilePicture: string | null;
     username: string;
   };
-  post: string;
+  post: {
+    id: string;
+  };
   content: string;
   likes: number;
+  dislikes: number;
   createdAt: Date;
   updatedAt: Date;
 }

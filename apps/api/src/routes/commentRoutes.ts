@@ -11,8 +11,8 @@ router.get("/:postId/comments", commentController.getMultipleComments);
 
 router.delete("/:postId/comments", protect, commentController.deleteComment);
 
-router.post("/:postId/comments/:commentId/likes", protect, commentController.deleteComment);
+router.post("/:postId/comments/:commentId/likes", protect, commentController.likeComment);
 
-router.delete("/:postId/comments/:commentId/likes", protect, commentController.deleteComment);
+router.post("/:postId/comments/:commentId/dislikes", protect, commentController.dislikeComment);
 
 export default router;

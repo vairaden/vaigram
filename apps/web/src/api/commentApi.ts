@@ -20,4 +20,14 @@ async function deleteComment(postId: string) {
   return res;
 }
 
-export { getMultipleComments, createComment, deleteComment };
+async function likeComment(data: { postId: string; commentId: string }) {
+  const res = await api.post(`/posts/${data.postId}/comments/${data.commentId}/likes`);
+  return res.data;
+}
+
+async function dislikeComment(data: { postId: string; commentId: string }) {
+  const res = await api.post(`/posts/${data.postId}/comments/${data.commentId}/dislikes`);
+  return res.data;
+}
+
+export { getMultipleComments, createComment, deleteComment, likeComment, dislikeComment };

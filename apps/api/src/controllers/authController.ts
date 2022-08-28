@@ -2,12 +2,11 @@ import bcrypt from "bcryptjs";
 import asyncHandler from "express-async-handler";
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import path from "path";
 import TokenModel from "../models/tokens";
 import tokenService from "../services/tokenService";
 import UserModel from "../models/users";
 
-require("dotenv").config({ path: path.join(__dirname, ".", ".env") });
+require("dotenv").config();
 
 const loginUser = asyncHandler(async (req: Request, res: Response) => {
   try {

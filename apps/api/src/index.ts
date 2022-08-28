@@ -2,7 +2,6 @@ import cors from "cors";
 import express from "express";
 import fileUpload from "express-fileupload";
 import mongoose from "mongoose";
-import path from "path";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorMiddleware";
 
@@ -12,7 +11,7 @@ import postRoutes from "./routes/postRoutes";
 import userRoutes from "./routes/userRoutes";
 import authRoutes from "./routes/authRoutes";
 
-require("dotenv").config({ path: path.join(__dirname, ".", ".env") });
+require("dotenv").config();
 
 const port = process.env.PORT || 3001;
 const mongoUri = process.env.MONGO_URI || "";

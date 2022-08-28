@@ -40,9 +40,9 @@ async function likePost(postId: string) {
   return res.data;
 }
 
-async function deletePostLike(postId: string) {
-  const res = await api.delete(`/posts/${postId}/likes`);
+async function dislikePost(postId: string) {
+  const res = await api.post(`/posts/${postId}/dislikes`);
   return res.data;
 }
 
-export { getMultiplePosts, getOnePost, createPost, deletePost, likePost, deletePostLike };
+export { getMultiplePosts, getOnePost, createPost, deletePost, likePost, dislikePost };

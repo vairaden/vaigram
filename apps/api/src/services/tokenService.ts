@@ -1,8 +1,7 @@
 import { sign } from "jsonwebtoken";
-import { resolve } from "path";
 import TokenModel from "../models/tokens";
 
-require("dotenv").config({ path: resolve(__dirname, "./.env") });
+require("dotenv").config();
 
 function generateTokens(payload: any) {
   const accessToken = sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: "1m" });

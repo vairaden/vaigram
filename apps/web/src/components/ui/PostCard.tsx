@@ -3,7 +3,7 @@ import { IPost } from "dtos";
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
-import { deletePost, likePost } from "../../api/postApi";
+import { deletePost, dislikePost, likePost } from "../../api/postApi";
 import Button from "./Button";
 
 interface IProps {
@@ -27,12 +27,22 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
     },
   });
 
+  const dislikeMutation = useMutation((postId: string) => dislikePost(postId), {
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts"]);
+    },
+  });
+
   function handleDelete() {
     deleteMutation.mutate(postData.id);
   }
 
   function handleLike() {
     likeMutation.mutate(postData.id);
+  }
+
+  function handleDislike() {
+    dislikeMutation.mutate(postData.id);
   }
 
   const unixDate = new Date(postData.createdAt);
@@ -67,9 +77,14 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
         alt={postData.description}
       />
       <div className="flex justify-between mx-1">
-        <p>{postData.likes} likes</p>
+        <p>
+          {postData.likes} likes {postData.dislikes} dislikes
+        </p>
         <Button type="button" onClick={handleLike}>
           Like
+        </Button>
+        <Button type="button" onClick={handleDislike}>
+          Dislike
         </Button>
       </div>
       <p>

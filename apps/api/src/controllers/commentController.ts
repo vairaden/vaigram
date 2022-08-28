@@ -19,7 +19,8 @@ const getMultipleComments = asyncHandler(async (req: Request, res: Response) => 
           createdAt: "descending",
         })
         .limit(Number(req.params.limit))
-        .populate("author", ["id", "profilePicture", "username"]);
+        .populate("author", ["id", "profilePicture", "username"])
+        .populate("post", ["id"]);
 
       const hasMore = comments.length === limit;
       const nextCursor = hasMore ? comments[limit - 1].createdAt.toString() : null;
@@ -33,7 +34,8 @@ const getMultipleComments = asyncHandler(async (req: Request, res: Response) => 
           createdAt: "descending",
         })
         .limit(limit)
-        .populate("author", ["id", "profilePicture", "username"]);
+        .populate("author", ["id", "profilePicture", "username"])
+        .populate("post", ["id"]);
 
       const hasMore = comments.length === limit;
       const nextCursor = hasMore ? comments[limit - 1].createdAt : null;
@@ -66,23 +68,25 @@ const createComment = asyncHandler(async (req: Request, res: Response) => {
 
 const likeComment = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const comment = await CommentModel.findById(req.commentId);
+    const comment = await CommentModel.findById(req.params.commentId);
 
     if (!comment) throw new Error("Post not found");
 
-    CommentModel.findByIdAndUpdate(req.postId, { likes: comment.likes + 1 });
+    await CommentModel.findByIdAndUpdate(req.params.commentId, { likes: comment.likes + 1 });
+    res.status(200).json({ message: "Comment liked" });
   } catch (err: any) {
     res.status(400).json({ message: err.message });
   }
 });
 
-const deleteCommentLike = asyncHandler(async (req: Request, res: Response) => {
+const dislikeComment = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const comment = await CommentModel.findById(req.commentId);
+    const comment = await CommentModel.findById(req.params.commentId);
 
     if (!comment) throw new Error("Post not found");
 
-    CommentModel.findByIdAndUpdate(req.postId, { likes: comment.likes - 1 });
+    await CommentModel.findByIdAndUpdate(req.params.commentId, { dislikes: comment.dislikes + 1 });
+    res.status(200).json({ message: "Comment disliked" });
   } catch (err: any) {
     res.status(400).json({ message: err.message });
   }
@@ -102,6 +106,6 @@ export default {
   getMultipleComments,
   createComment,
   likeComment,
-  deleteCommentLike,
+  dislikeComment,
   deleteComment,
 };

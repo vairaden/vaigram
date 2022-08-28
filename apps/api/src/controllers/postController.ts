@@ -105,7 +105,8 @@ const dislikePost = asyncHandler(async (req: Request, res: Response) => {
 
     if (!post) throw new Error("Post not found");
 
-    PostModel.findByIdAndUpdate(req.params.postId, { dislikes: post.dislikes + 1 });
+    await PostModel.findByIdAndUpdate(req.params.postId, { dislikes: post.dislikes + 1 });
+
     res.status(200).json({ message: "Post disliked" });
   } catch (err: any) {
     res.status(400).json({ message: err.message });
