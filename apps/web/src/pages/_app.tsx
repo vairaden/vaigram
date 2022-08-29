@@ -4,6 +4,7 @@ import Layout from "../components/Layout";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState } from "react";
+import Head from "next/head";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [queryClient] = useState(
@@ -24,6 +25,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <Head>
+        <link rel="shortcut icon" type="image/x-icon" href="/favicons/favicon.ico" />
+      </Head>
       <Layout>
         <Component {...pageProps} />
       </Layout>

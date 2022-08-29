@@ -53,7 +53,7 @@ const PostCreator: FC<IProps> = ({ isOpened, closeCallback }) => {
     setPostImage(null);
   }
   return (
-    <aside className="flex flex-col fixed z-30 left-[50%] translate-x-[-50%] translate-y-16">
+    <aside className="flex flex-col fixed z-30 left-[50%] translate-x-[-50%] translate-y-8">
       <DropdownAnimation isOpen={isOpened}>
         <div className="border-black border-2 rounded-lg bg-white overflow-hidden w-[23rem]">
           {user ? (

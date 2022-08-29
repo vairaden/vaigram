@@ -6,6 +6,7 @@ import useTheme from "../../hooks/useTheme";
 import Button from "./Button";
 import PostCreator from "./PostCreator";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
+import PlusButton from "./PlusButton";
 
 const Navbar: FC = () => {
   const [isDarkTheme, setDarkTheme] = useTheme();
@@ -36,17 +37,15 @@ const Navbar: FC = () => {
         animate={navVisible || creatorOpened ? "visible" : "hidden"}
         variants={navVariants}
         initial={{ translateX: "-50%" }}
-        className="fixed left-[50%] z-10 w-[23rem] py-2 px-4
-        flex justify-between rounded-[200px] bg-orange-400 dark:bg-black transition-colors duration-300"
+        className="fixed left-[50%] z-10 w-[24rem] h-[3rem] py-2 px-4
+        flex justify-between rounded-lg shadow-md bg-orange-400 dark:bg-black transition-colors duration-300"
       >
         <Link href="/">
           <a>
             <h1 className="text-center mr-auto">Vaigram</h1>
           </a>
         </Link>
-        <Button onClick={() => setCreatorOpened((prev) => !prev)}>
-          {creatorOpened ? "Close" : "New post"}
-        </Button>
+        <PlusButton onClick={() => setCreatorOpened((prev) => !prev)} isActive={creatorOpened} />
         <div className="space-x-4">
           <Button onClick={() => setDarkTheme((prev) => !prev)}>
             {isDarkTheme ? "Dark" : "Light"}
