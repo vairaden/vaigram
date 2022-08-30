@@ -1,5 +1,9 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
+interface IOriginalRequest extends AxiosRequestConfig {
+  sent?: boolean;
+}
+
 const api = axios.create({
   withCredentials: true,
   baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
@@ -19,7 +23,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (res: AxiosResponse) => res,
   async (error: AxiosError) => {
-    const originalRequest = { ...error.config, sent: false };
+    const originalRequest: IOriginalRequest = error.config;
 
     if (!error.response) throw new Error("No response in interceptor");
 
@@ -30,6 +34,9 @@ api.interceptors.response.use(
       });
 
       sessionStorage.setItem("accessToken", response.data.accessToken);
+
+      if (!originalRequest.headers) throw new Error("No headers");
+      originalRequest.headers.authorization = `Bearer ${response.data.accessToken}`;
 
       return api.request(originalRequest);
     }

@@ -4,8 +4,8 @@ import TokenModel from "../models/tokens";
 require("dotenv").config();
 
 function generateTokens(payload: any) {
-  const accessToken = sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: "1m" });
-  const refreshToken = sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
+  const accessToken = sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: "15m" });
+  const refreshToken = sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: "30d" });
 
   return {
     accessToken,

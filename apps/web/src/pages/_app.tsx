@@ -18,6 +18,11 @@ function MyApp({ Component, pageProps }: AppProps) {
               if (failureCount === 3) return false;
               return true;
             },
+            onError: (err: any) => {
+              if (err.response.status === 401) {
+                queryClient.setQueriesData(["user"], (data: any) => null);
+              }
+            },
           },
         },
       })

@@ -25,6 +25,7 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
       .status(201)
       .cookie("refreshToken", refreshToken, {
         httpOnly: true,
+        maxAge: 30 * 24 * 60 * 60 * 1000,
       })
       .json({
         id: user.id,
@@ -82,6 +83,7 @@ const handleRefreshToken = asyncHandler(async (req: Request, res: Response) => {
         .status(201)
         .cookie("refreshToken", newTokens.refreshToken, {
           httpOnly: true,
+          maxAge: 30 * 24 * 60 * 60 * 1000,
         })
         .json({
           id: userData.id,
