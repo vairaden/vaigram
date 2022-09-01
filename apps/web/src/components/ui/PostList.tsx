@@ -1,5 +1,4 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 import { IPost } from "dtos";
 import { FC, useCallback, useMemo, useRef } from "react";
 import { getMultiplePosts } from "../../api/postApi";

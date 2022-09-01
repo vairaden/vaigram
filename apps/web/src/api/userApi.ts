@@ -19,7 +19,7 @@ async function deleteUser() {
 async function getProfile(userId: string) {
   const res = await api.get<IProfile>(`/users/${userId}`);
 
-  return res;
+  return res.data;
 }
 
 async function setProfilePicture(userId: string, data: FormData) {

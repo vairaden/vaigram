@@ -49,7 +49,7 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
 
 const getProfile = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const user = await UserModel.findById(req.userId);
+    const user = await UserModel.findById(req.params.userId);
 
     if (!user) throw new Error("User not found");
 

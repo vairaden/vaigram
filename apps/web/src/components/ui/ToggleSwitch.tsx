@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { FC, ReactNode, useState } from "react";
+import { FC, ReactNode } from "react";
 
 interface IProps {
   children: ReactNode;

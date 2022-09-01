@@ -12,9 +12,20 @@ const PlusButton: FC<IProps> = ({ onClick, isActive }) => {
     <motion.div
       onClick={onClick}
       animate={isActive ? { rotate: 45 } : { rotate: 0 }}
-      className="cursor-pointer z-50"
+      className="cursor-pointer"
     >
-      <Image src="/plus-icon.svg" width="32px" height="32px" alt="Add post button" />
+      <svg
+        width="32"
+        height="32"
+        viewBox="0 0 72 72"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <g id="plus icon">
+          <rect id="horizontal line" y="30" width="72" height="12" rx="4" fill="#ffff" />
+          <rect id="vertical line" x="30" width="12" height="72" rx="4" fill="#ffff" />
+        </g>
+      </svg>
     </motion.div>
   );
 };
