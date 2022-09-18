@@ -87,4 +87,5 @@ const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
     </>
   );
 };
+
 export default CommentList;

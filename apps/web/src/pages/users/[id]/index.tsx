@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { logoutUser, refreshAccess } from "../../../api/authApi";
-import { getProfile } from "../../../api/userApi";
+import { followUser, getProfile } from "../../../api/userApi";
 import Button from "../../../components/ui/Button";
 import PostList from "../../../components/ui/PostList";
 
@@ -24,6 +24,10 @@ const Profile: NextPage = () => {
 
   const logout = useMutation(() => logoutUser(), {
     onSuccess: () => queryClient.resetQueries(["user"]),
+  });
+
+  const follow = useMutation(() => followUser(profileId), {
+    onSuccess: () => queryClient.resetQueries(["profile", user?.id]),
   });
 
   function handleLogout() {
@@ -60,6 +64,11 @@ const Profile: NextPage = () => {
               <Link href={`/users/${profileId}/following`}>
                 <a>Following</a>
               </Link>
+              {user?.id !== profileId && (
+                <Button onClick={follow.mutate} className="mt-auto mb-2">
+                  Follow
+                </Button>
+              )}
               {user?.id === profileId && (
                 <Button onClick={handleLogout} className="mt-auto mb-2">
                   Logout
@@ -67,7 +76,7 @@ const Profile: NextPage = () => {
               )}
             </div>
           </section>
-          <PostList limit={4} authorId={profileId} allowPostDeletion />
+          <PostList limit={4} authorId={profileId} allowPostDeletion={user?.id === profileId} />
         </>
       )}
     </>

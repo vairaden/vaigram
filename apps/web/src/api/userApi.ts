@@ -9,8 +9,8 @@ async function registerUser(userData: z.infer<typeof registerValidator>) {
 
   return res.data;
 }
-async function deleteUser() {
-  const res = await api.delete("/users");
+async function deleteUser(userId: string) {
+  const res = await api.delete(`/users/${userId}`);
   sessionStorage.removeItem("accessToken");
 
   return res.data;
@@ -32,14 +32,14 @@ async function setProfilePicture(userId: string, data: FormData) {
   return res;
 }
 
-async function followUser(userId: string, othUserId: string) {
-  const res = await api.post<IUser>(`/users/${userId}/following`, { othUserId });
+async function followUser(othUserId: string) {
+  const res = await api.post<IUser>(`/users/${othUserId}/follow`);
 
   return res;
 }
 
-async function unfollowUser(userId: string, othUserId: string) {
-  const res = await api.patch<IUser>(`/users/${userId}/following`, { othUserId });
+async function unfollowUser(othUserId: string) {
+  const res = await api.post<IUser>(`/users/${othUserId}/unfollow`);
 
   return res;
 }

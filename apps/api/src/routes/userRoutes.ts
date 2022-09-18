@@ -9,11 +9,11 @@ router.post("/", userController.registerUser);
 
 router.get("/:userId", userController.getProfile);
 
-router.post("/:userId/profile_picture", protect, userController.setProfilePicture);
+router.post("/:othUserId/profile_picture", protect, userController.setProfilePicture);
 
-router.post("/:userId/following", protect, userController.followUser);
+router.post("/:othUserId/follow", protect, userController.followUser);
 
-router.delete("/:userId/following", protect, userController.unfollowUser);
+router.post("/:userId/unfollow", protect, userController.unfollowUser);
 
 router.delete("/", protect, userController.deleteUser);
 

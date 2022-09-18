@@ -59,6 +59,7 @@ const getProfile = asyncHandler(async (req: Request, res: Response) => {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
+      following: user.following,
       createdAt: user.createdAt,
     });
   } catch (err: any) {
@@ -93,7 +94,7 @@ const setProfilePicture = asyncHandler(async (req: Request, res: Response) => {
 const followUser = asyncHandler(async (req: Request, res: Response) => {
   try {
     const user = await UserModel.findById(req.userId);
-    const othUser = await UserModel.findById(req.query.othUserId);
+    const othUser = await UserModel.findById(req.params.othUserId);
 
     if (!user || !othUser) throw new Error("User not found");
     if (user.following.includes(othUser.id)) throw new Error("Following already");
@@ -109,7 +110,7 @@ const followUser = asyncHandler(async (req: Request, res: Response) => {
 const unfollowUser = asyncHandler(async (req: Request, res: Response) => {
   try {
     const user = await UserModel.findById(req.userId);
-    const othUser = await UserModel.findById(req.query.othUserId);
+    const othUser = await UserModel.findById(req.params.othUserId);
 
     if (user === null || othUser === null) throw new Error("User not found");
     if (!user.following.includes(othUser.id)) throw new Error("Not following yet");
