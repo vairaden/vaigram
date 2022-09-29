@@ -1,8 +1,6 @@
-import path from "path";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { UploadedFile } from "express-fileupload";
 import PostModel from "../models/posts";
 
 import UserModel from "../models/users";
@@ -69,8 +67,7 @@ const getProfile = asyncHandler(async (req: Request, res: Response) => {
 
 const setProfilePicture = asyncHandler(async (req: Request, res: Response) => {
   try {
-    if (!req.files) throw new Error("No file attached");
-    const image: UploadedFile = req.files.postImage as UploadedFile;
+    if (!req.file) throw new Error("No file attached");
 
     const user = await UserModel.findById(req.userId);
     if (!user) throw new Error("User not found");
@@ -78,12 +75,10 @@ const setProfilePicture = asyncHandler(async (req: Request, res: Response) => {
     const post = await PostModel.create({
       author: req.userId,
       description: req.body.description,
+      image: req.file,
     });
 
-    const filePath = path.join(__dirname, "..", "..", "uploads", post.id.toString());
-    await image.mv(filePath);
-
-    await UserModel.findByIdAndUpdate(req.userId, { profilePicture: post.id });
+    await UserModel.findByIdAndUpdate(req.userId, { profilePicture: post.image });
 
     res.status(200).json({ message: "Profile picture set" });
   } catch (err: any) {

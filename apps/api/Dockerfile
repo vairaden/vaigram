@@ -32,4 +32,6 @@ RUN adduser --system --uid 1001 expressjs
 USER expressjs
 COPY --from=installer /app .
 
+VOLUME [ "/apps/api/uploads" ]
+
 CMD ["node", "apps/api/dist/index.js"]

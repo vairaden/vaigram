@@ -7,7 +7,7 @@ const nextConfig = {
   experimental: {
     outputFileTracingRoot: path.join(__dirname, "../../"),
   },
-  swcMinify: true,
+  // swcMinify: true,
   images: {
     domains: ["localhost"],
   },

@@ -73,7 +73,7 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
       <Image
         width="400px"
         height="400px"
-        src={`${process.env.NEXT_PUBLIC_API_URL}/api/images/${postData.id}`}
+        src={`${process.env.NEXT_PUBLIC_API_URL}/api/images/${postData.image}`}
         alt={postData.description}
       />
       <div className="flex justify-between mx-1">

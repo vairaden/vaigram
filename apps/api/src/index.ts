@@ -1,7 +1,7 @@
+import mongoose from "mongoose";
+import morgan from "morgan";
 import cors from "cors";
 import express from "express";
-import fileUpload from "express-fileupload";
-import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorMiddleware";
 
@@ -20,11 +20,12 @@ const app = express();
 
 mongoose.connect(mongoUri);
 
+app.use(morgan("combined"));
 app.use(cors({ origin: `http://localhost:3000`, credentials: true }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(fileUpload());
+app.use("uploads", express.static("uploads"));
 
 app.use("/api/images", imageRoutes);
 app.use("/api/users", userRoutes);

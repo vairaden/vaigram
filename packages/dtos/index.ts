@@ -27,6 +27,7 @@ export interface IPost {
     username: string;
   };
   description: string;
+  image: string;
   likes: number;
   dislikes: number;
   createdAt: Date;

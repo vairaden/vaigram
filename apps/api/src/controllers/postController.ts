@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import asyncHandler from "express-async-handler";
-import { UploadedFile } from "express-fileupload";
 import path from "path";
 
 import CommentModel from "../models/comments";
@@ -64,18 +63,13 @@ const getPostById = asyncHandler(async (req: Request, res: Response) => {
 
 const createPost = asyncHandler(async (req: Request, res: Response) => {
   try {
-    if (!req.files) throw new Error("No file attached");
+    if (!req.file) throw new Error("No file attached");
 
-    const image: UploadedFile = req.files.postImage as UploadedFile;
-
-    const document = await PostModel.create({
+    await PostModel.create({
       author: req.userId,
       description: req.body.description,
+      image: req.file,
     });
-
-    const filePath = path.join(__dirname, "..", "..", "uploads", document.id.toString());
-
-    await image.mv(filePath);
 
     res.status(200).json({
       message: "Post created",
