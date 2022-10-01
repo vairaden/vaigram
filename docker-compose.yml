@@ -17,17 +17,9 @@ services:
       - 8081:8081
     env_file:
       - ./mongo-express/.env
-  nginx:
-    restart: always
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - 80:80
   api:
     depends_on:
       - mongo
-      - nginx
     build:
       context: .
       dockerfile: ./apps/api/Dockerfile
@@ -41,3 +33,13 @@ services:
       dockerfile: ./apps/web/Dockerfile
     env_file:
       - ./apps/web/.env.local
+  nginx:
+    depends_on:
+      - api
+      - frontend
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80

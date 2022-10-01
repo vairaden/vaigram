@@ -7,30 +7,15 @@ services:
     env_file:
       - ./mongo/.env
     volumes:
-      - ./mongo/.initdb.js:/docker-entrypoint-initdb.d/initdb.js
-  mongo-express:
-    depends_on:
-      - mongo
-    image: mongo-express
-    restart: always
+      - ./mongo/initdb.d:/docker-entrypoint-initdb.d
     ports:
-      - 8081:8081
-    env_file:
-      - ./mongo-express/.env
-  nginx:
-    restart: always
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - 80:80
+      - 27017:27017
   api:
     depends_on:
       - mongo
-      - nginx
     build:
       context: .
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./apps/api/Dockerfile.dev
     volumes:
       - .:/app
     env_file:
@@ -41,9 +26,19 @@ services:
       - api
     build:
       context: .
-      dockerfile: ./Dockerfile.dev
+      dockerfile: ./apps/web/Dockerfile.dev
     volumes:
       - .:/app
     env_file:
       - ./apps/web/.env.local
     command: turbo run dev --scope="web"
+  nginx:
+    depends_on:
+      - api
+      - frontend
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80

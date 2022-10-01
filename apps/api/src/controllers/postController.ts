@@ -115,7 +115,7 @@ const deletePostById = asyncHandler(async (req: Request, res: Response) => {
     if (post.author.id.toString() !== req.userId) throw new Error("Deletion not authorized");
 
     await PostModel.findByIdAndDelete(post.id);
-    const filePath = path.join(__dirname, "..", "..", "uploads", post.id.toString());
+    const filePath = path.join("uploads", post.id.toString());
     await fs.unlink(filePath);
 
     await CommentModel.deleteMany({ post: post.id });

@@ -14,11 +14,10 @@ import authRoutes from "./routes/authRoutes";
 require("dotenv").config();
 
 const port = process.env.PORT || 3001;
-const mongoUri = process.env.MONGO_URI || "";
 
 const app = express();
 
-mongoose.connect(mongoUri);
+mongoose.connect(process.env.MONGO_URI);
 
 app.use(morgan("combined"));
 app.use(cors({ origin: `http://localhost:3000`, credentials: true }));
