@@ -1,5 +1,8 @@
 version: "3"
 
+volumes:
+  uploads: {}
+
 services:
   mongo:
     image: mongo:6.0.1
@@ -7,22 +10,17 @@ services:
     env_file:
       - ./mongo/.env
     volumes:
-      - ./mongo/.initdb.js:/docker-entrypoint-initdb.d/initdb.js
-  mongo-express:
-    depends_on:
-      - mongo
-    image: mongo-express
-    restart: always
+      - ./mongo/initdb.d:/docker-entrypoint-initdb.d
     ports:
-      - 8081:8081
-    env_file:
-      - ./mongo-express/.env
+      - 27017:27017
   api:
     depends_on:
       - mongo
     build:
       context: .
       dockerfile: ./apps/api/Dockerfile
+    volumes:
+      - uploads:/uploads
     env_file:
       - ./apps/api/.env
   frontend:
@@ -43,3 +41,5 @@ services:
       dockerfile: Dockerfile
     ports:
       - 80:80
+    volumes:
+      - uploads:/uploads

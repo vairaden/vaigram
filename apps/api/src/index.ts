@@ -5,7 +5,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middlewares/errorMiddleware";
 
-import imageRoutes from "./routes/imageRoutes";
+// import imageRoutes from "./routes/imageRoutes";
 import commentRoutes from "./routes/commentRoutes";
 import postRoutes from "./routes/postRoutes";
 import userRoutes from "./routes/userRoutes";
@@ -20,13 +20,13 @@ const app = express();
 mongoose.connect(process.env.MONGO_URI);
 
 app.use(morgan("combined"));
-app.use(cors({ origin: `http://localhost:3000`, credentials: true }));
+app.use(cors({ origin: ["http://localhost", "http://127.0.0.1"], credentials: true }));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use("uploads", express.static("uploads"));
 
-app.use("/api/images", imageRoutes);
+// app.use("/api/images", imageRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/posts", commentRoutes);

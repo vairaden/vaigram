@@ -68,7 +68,7 @@ const createPost = asyncHandler(async (req: Request, res: Response) => {
     await PostModel.create({
       author: req.userId,
       description: req.body.description,
-      image: req.file,
+      image: req.file.filename,
     });
 
     res.status(200).json({
