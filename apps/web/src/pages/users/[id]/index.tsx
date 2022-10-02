@@ -52,7 +52,7 @@ const Profile: NextPage = () => {
             <Image
               width="150px"
               height="150px"
-              src={`${process.env.NEXT_PUBLIC_API_URL}/api/images/${profile.profilePicture}`}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_PATH}/${profile.profilePicture}`}
               alt="Profile picture"
             />
             <div className="flex flex-col ml-4">

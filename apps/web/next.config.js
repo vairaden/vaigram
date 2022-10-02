@@ -8,7 +8,7 @@ const nextConfig = {
     outputFileTracingRoot: path.join(__dirname, "../../"),
   },
   images: {
-    domains: ["localhost"],
+    domains: ["localhost", "api"],
   },
   i18n: {
     locales: ["en"],

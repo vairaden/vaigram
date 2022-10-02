@@ -30,7 +30,7 @@ const Post: NextPage = () => {
             <Image
               width="400px"
               height="400px"
-              src={`${process.env.NEXT_PUBLIC_API_URL}/api/images/${data.image}`}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_PATH}/${data.image}`}
               alt={data.description}
             />
           </article>

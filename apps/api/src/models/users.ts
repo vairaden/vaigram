@@ -2,7 +2,7 @@ import { model, Schema, Types } from "mongoose";
 
 interface IMongoUser {
   id: Types.ObjectId;
-  profilePicture: Types.ObjectId;
+  profilePicture: string;
   username: string;
   firstName: string;
   lastName: string;
@@ -16,7 +16,7 @@ interface IMongoUser {
 const UserSchema = new Schema<IMongoUser>(
   {
     profilePicture: {
-      type: Schema.Types.ObjectId,
+      type: String,
       default: null,
     },
     username: {

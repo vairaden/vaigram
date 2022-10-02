@@ -72,13 +72,13 @@ const setProfilePicture = asyncHandler(async (req: Request, res: Response) => {
     const user = await UserModel.findById(req.userId);
     if (!user) throw new Error("User not found");
 
-    const post = await PostModel.create({
+    await PostModel.create({
       author: req.userId,
       description: req.body.description,
-      image: req.file,
+      image: req.file.filename,
     });
 
-    await UserModel.findByIdAndUpdate(req.userId, { profilePicture: post.image });
+    await UserModel.findByIdAndUpdate(req.userId, { profilePicture: req.file.filename });
 
     res.status(200).json({ message: "Profile picture set" });
   } catch (err: any) {

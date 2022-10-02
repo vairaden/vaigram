@@ -57,7 +57,7 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
               className="rounded-[40px]"
               width="40px"
               height="40px"
-              src={`${process.env.NEXT_PUBLIC_API_URL}/api/images/${postData.author.profilePicture}`}
+              src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_PATH}/${postData.author.profilePicture}`}
               alt="Profile pic"
             />
             <h2 className="pt-2 mx-1">{postData.author.username}</h2>
@@ -73,7 +73,7 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
       <Image
         width="400px"
         height="400px"
-        src={`${process.env.NEXT_PUBLIC_API_URL}/api/images/${postData.image}`}
+        src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_PATH}/${postData.image}`}
         alt={postData.description}
       />
       <div className="flex justify-between mx-1">

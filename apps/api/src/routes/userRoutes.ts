@@ -11,7 +11,7 @@ router.post("/", userController.registerUser);
 router.get("/:userId", userController.getProfile);
 
 router.post(
-  "/:othUserId/profile_picture",
+  "/:userId/profile_picture",
   protect,
   upload.single("postImage"),
   userController.setProfilePicture
@@ -19,7 +19,7 @@ router.post(
 
 router.post("/:othUserId/follow", protect, userController.followUser);
 
-router.post("/:userId/unfollow", protect, userController.unfollowUser);
+router.post("/:othUserId/unfollow", protect, userController.unfollowUser);
 
 router.delete("/", protect, userController.deleteUser);
 
