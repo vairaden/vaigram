@@ -69,6 +69,8 @@ const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
         <h2>Loading</h2>
       ) : error || !data ? (
         <h2>Error connecting to server</h2>
+      ) : comments.length === 0 ? (
+        <h2>Nobody commented this post yet</h2>
       ) : (
         <ul className="mt-2">
           {comments.map((comment, index) =>

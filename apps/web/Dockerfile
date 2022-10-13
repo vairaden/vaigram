@@ -1,9 +1,13 @@
 FROM node:18-alpine AS builder
+
 RUN apk update
-# Set working directory
+
 WORKDIR /app
+
 RUN yarn global add turbo
+
 COPY . .
+
 RUN turbo prune --scope=web --docker
 
 # Add lockfile and package.json's of isolated subworkspace

@@ -25,7 +25,7 @@ const Following: NextPage = () => {
       ) : (
         <>
           {profile.following.map((userId) => (
-            <UserCard key={userId} userId={userId} />
+            <UserCard key={userId} userId={userId} profileId={profileId} />
           ))}
         </>
       )}

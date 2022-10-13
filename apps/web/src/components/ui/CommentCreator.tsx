@@ -53,7 +53,7 @@ const CommentCreator: FC<IParams> = ({ postId }) => {
         </form>
       ) : (
         <div className="px-4">
-          <p>You are not logged in</p>
+          <p>You are not logged in to leave comments</p>
           <Link href="/login">
             <a className="underline text-gray-700">Login</a>
           </Link>

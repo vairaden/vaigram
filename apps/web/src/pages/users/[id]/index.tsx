@@ -57,10 +57,7 @@ const Profile: NextPage = () => {
             />
             <div className="flex flex-col ml-4">
               <h2>{profile.username}</h2>
-              <p>
-                {profile.firstName}
-                {profile.lastName}
-              </p>
+              <p>{`${profile.firstName} ${profile.lastName}`}</p>
               <Link href={`/users/${profileId}/following`}>
                 <a>Following</a>
               </Link>

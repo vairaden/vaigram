@@ -1,18 +1,33 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { FC } from "react";
-import { getProfile } from "../../api/userApi";
+import { getProfile, unfollowUser } from "../../api/userApi";
+import Button from "./Button";
 
 interface IProps {
   userId: string;
+  profileId: string;
 }
 
-const UserCard: FC<IProps> = ({ userId }) => {
+const UserCard: FC<IProps> = ({ userId, profileId }) => {
+  const queryClient = useQueryClient();
+
   const {
     isLoading,
     error,
     data: profile,
   } = useQuery(["profile", userId], () => getProfile(userId), { enabled: !!userId });
+
+  const unfollowMutation = useMutation(
+    (id: string) => {
+      return unfollowUser(id);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["profile", profileId]);
+      },
+    }
+  );
 
   return (
     <>
@@ -35,6 +50,7 @@ const UserCard: FC<IProps> = ({ userId }) => {
             <h2>{profile.username}</h2>
             {profile.firstName} {profile.lastName}
           </p>
+          <Button onClick={() => unfollowMutation.mutate(userId)}>Unfollow</Button>
         </article>
       )}
     </>

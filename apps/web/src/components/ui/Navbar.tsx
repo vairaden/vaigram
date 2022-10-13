@@ -38,11 +38,11 @@ const Navbar: FC = () => {
         variants={navVariants}
         initial={{ translateX: "-50%" }}
         className="fixed left-[50%] z-10 w-[24rem] h-[3rem] py-2 px-4
-        flex justify-between rounded-lg shadow-md bg-orange-400 dark:bg-black transition-colors duration-300"
+        flex justify-between rounded-lg shadow-md bg-orange-400 dark:bg-black"
       >
         <Link href="/">
           <a>
-            <h1 className="text-center mr-auto">Vaigram</h1>
+            <h1 className="font-header font-semibold text-xl text-center mr-auto">Vaigram</h1>
           </a>
         </Link>
         <PlusButton onClick={() => setCreatorOpened((prev) => !prev)} isActive={creatorOpened} />
