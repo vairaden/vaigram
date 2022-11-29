@@ -6,7 +6,7 @@ volumes:
 services:
   mongo:
     image: mongo:6.0.1
-    restart: always
+    restart: on-failure
     env_file:
       - ./mongo/.env
     volumes:
@@ -17,20 +17,28 @@ services:
     depends_on:
       - mongo
     build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
+      context: ./api
+      dockerfile: Dockerfile.dev
+    command: sh -c "yarn && yarn dev"
     volumes:
-      - uploads:/uploads
-    env_file:
-      - ./apps/api/.env
+       - ./api:/app
+    # depends_on:
+    #   - mongo
+    # build:
+    #   context: ./api
+    #   dockerfile: Dockerfile
+    # volumes:
+    #   - uploads:/uploads
+    # env_file:
+    #   - ./api/.env
   frontend:
     depends_on:
       - api
     build:
-      context: .
-      dockerfile: ./apps/web/Dockerfile
+      context: ./web
+      dockerfile: Dockerfile
     env_file:
-      - ./apps/web/.env.local
+      - ./web/.env.local
   nginx:
     depends_on:
       - api

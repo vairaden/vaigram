@@ -1,9 +1,0 @@
-{
-  "name": "validators",
-  "version": "0.1.0",
-  "main": "index.ts",
-  "license": "MIT",
-  "dependencies": {
-    "zod": "^3.18.0"
-  }
-}

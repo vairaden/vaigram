@@ -1,7 +1,0 @@
-FROM node:18-alpine AS builder
-
-RUN apk update
-
-WORKDIR /app
-
-RUN yarn global add turbo

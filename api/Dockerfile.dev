@@ -1,0 +1,11 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+RUN apk update
+
+ENV NODE_ENV development
+
+VOLUME [ "/uploads" ]
+
+CMD ["yarn", "dev"]
