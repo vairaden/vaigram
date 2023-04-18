@@ -1,15 +1,10 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { NextPage } from "next";
-import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { z } from "zod";
 import { registerUser } from "../api/userApi";
 import Button from "../components/ui/Button";
 import FormInput from "../components/ui/FormInput";
-import Head from "next/head";
 
-const Register: NextPage = () => {
-  const router = useRouter();
+const Register = () => {
   const [registerError, setRegisterError] = useState<string | null>(null);
 
   const registerValidator = z.object({
