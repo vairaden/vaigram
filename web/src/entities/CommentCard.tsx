@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FC } from "react";
-import { dislikeComment, likeComment } from "../../api/commentApi";
+import { dislikeComment, likeComment } from "../shared/api/commentApi";
 import Button from "./Button";
 
 interface IComment {

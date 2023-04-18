@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { FC } from "react";
-import { getProfile, unfollowUser } from "../../api/userApi";
-import Button from "./Button";
+import { getProfile, unfollowUser } from "../api/userApi";
+import Button from "../../entities/Button";
 
 interface IProps {
   userId: string;

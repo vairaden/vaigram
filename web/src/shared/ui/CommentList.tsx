@@ -1,17 +1,19 @@
 import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { FC, useCallback, useMemo, useRef } from "react";
-import { getMultiplePosts } from "../../api/postApi";
-import PostCard from "./PostCard";
+import { getMultipleComments } from "../api/commentApi";
+import CommentCard from "../../entities/CommentCard";
 
-interface IPost {
+interface IComment {
   id: string;
   author: {
     id: string;
     profilePicture: string | null;
     username: string;
   };
-  description: string;
-  image: string;
+  post: {
+    id: string;
+  };
+  content: string;
   likes: number;
   dislikes: number;
   createdAt: Date;
@@ -21,35 +23,29 @@ interface IPost {
 interface IProps {
   limit: number;
   pagesToKeep?: number;
-  authorId?: string;
-  allowPostDeletion?: boolean;
+  postId: string;
 }
 
-const PostList: FC<IProps> = ({
-  limit,
-  pagesToKeep = null,
-  authorId = null,
-  allowPostDeletion = false,
-}) => {
+const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
   const queryClient = useQueryClient();
 
   const { isLoading, data, error, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    ["posts", authorId],
-    ({ pageParam = { limit, cursor: null, authorId } }) => getMultiplePosts(pageParam),
+    ["comments", postId],
+    ({ pageParam = { postId, limit, cursor: null } }) => getMultipleComments(pageParam),
     {
       getNextPageParam: (lastPage) =>
         lastPage.nextCursor
           ? {
+              postId,
               limit,
               cursor: lastPage.nextCursor,
-              authorId,
             }
           : undefined,
     }
   );
 
   const observer = useRef<IntersectionObserver | null>(null);
-  const lastPostRef = useCallback(
+  const lastCommentRef = useCallback(
     (node: HTMLElement) => {
       if (isLoading) return;
 
@@ -57,7 +53,7 @@ const PostList: FC<IProps> = ({
 
       observer.current = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting && hasNextPage) {
-          queryClient.setQueryData(["posts", authorId], (data: any) =>
+          queryClient.setQueryData(["comments", postId], (data: any) =>
             data.pages.length === pagesToKeep
               ? {
                   pages: data.pages.slice(1),
@@ -70,17 +66,17 @@ const PostList: FC<IProps> = ({
       });
       if (node) observer.current.observe(node);
     },
-    [fetchNextPage, hasNextPage, isLoading, pagesToKeep, authorId, queryClient]
+    [fetchNextPage, hasNextPage, isLoading, pagesToKeep, postId, queryClient]
   );
 
-  const posts = useMemo(() => {
-    let postList: IPost[] = [];
+  const comments = useMemo(() => {
+    let commentList: IComment[] = [];
     if (data) {
       for (let page of data.pages) {
-        postList = [...postList, ...page.posts];
+        commentList = [...commentList, ...page.comments];
       }
     }
-    return postList;
+    return commentList;
   }, [data]);
 
   return (
@@ -89,20 +85,18 @@ const PostList: FC<IProps> = ({
         <h2>Loading</h2>
       ) : error || !data ? (
         <h2>Error connecting to server</h2>
+      ) : comments.length === 0 ? (
+        <h2>Nobody commented this post yet</h2>
       ) : (
-        <ul>
-          {posts.map((post, index) =>
-            index + 1 === posts.length ? (
-              <li key={post.id}>
-                <PostCard
-                  forwardRef={lastPostRef}
-                  postData={post}
-                  allowDeletion={allowPostDeletion}
-                />
+        <ul className="mt-2">
+          {comments.map((comment, index) =>
+            index + 1 === comments.length ? (
+              <li key={comment.id}>
+                <CommentCard commentData={comment} forwardRef={lastCommentRef} />
               </li>
             ) : (
-              <li key={post.id}>
-                <PostCard postData={post} allowDeletion={allowPostDeletion} />
+              <li key={comment.content}>
+                <CommentCard commentData={comment} />
               </li>
             )
           )}
@@ -112,4 +106,4 @@ const PostList: FC<IProps> = ({
   );
 };
 
-export default PostList;
+export default CommentList;

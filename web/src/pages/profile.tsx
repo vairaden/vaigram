@@ -1,15 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { logoutUser, refreshAccess } from "../../../api/authApi";
-import { followUser, getProfile } from "../../../api/userApi";
-import Button from "../../../components/ui/Button";
-import PostList from "../../../components/ui/PostList";
+import { logoutUser, refreshAccess } from "../shared/api/authApi";
+import { followUser, getProfile } from "../shared/api/userApi";
+import Button from "../entities/Button";
+import PostList from "../shared/ui/PostList";
 
-const Profile: NextPage = () => {
+const Profile = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const profileId = router.query.id as string;

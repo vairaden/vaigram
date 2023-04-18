@@ -1,13 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
-import { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import { getOnePost } from "../../api/postApi";
-import CommentCreator from "../../components/ui/CommentCreator";
-import CommentList from "../../components/ui/CommentList";
+import { getOnePost } from "../shared/api/postApi";
+import CommentCreator from "../shared/ui/CommentCreator";
+import CommentList from "../shared/ui/CommentList";
 
-const Post: NextPage = () => {
+const Post = () => {
   const router = useRouter();
   const id = router.query.id as string;
 

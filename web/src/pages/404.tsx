@@ -1,7 +1,4 @@
-import { NextPage } from "next";
-import Link from "next/link";
-
-const NotFoundPage: NextPage = () => {
+const NotFoundPage = () => {
   return (
     <>
       <h2>Page not found</h2>

@@ -2,8 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
 import { FC } from "react";
-import { deletePost, dislikePost, likePost } from "../../api/postApi";
-import Button from "./Button";
+import { deletePost, dislikePost, likePost } from "../api/postApi";
+import Button from "../../entities/Button";
 
 interface IPost {
   id: string;

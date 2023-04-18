@@ -1,15 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { NextPage } from "next";
-import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { z } from "zod";
-import { loginUser, refreshAccess } from "../api/authApi";
-import Button from "../components/ui/Button";
-import FormInput from "../components/ui/FormInput";
+import { loginUser, refreshAccess } from "../shared/api/authApi";
+import Button from "../entities/Button";
+import FormInput from "../shared/ui/FormInput";
 
-const Login: NextPage = () => {
+const Login = () => {
   const queryClient = useQueryClient();
   const router = useRouter();
 

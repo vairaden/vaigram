@@ -2,9 +2,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { z } from "zod";
-import { refreshAccess } from "../../api/authApi";
-import { createComment } from "../../api/commentApi";
-import Button from "./Button";
+import { refreshAccess } from "../api/authApi";
+import { createComment } from "../api/commentApi";
+import Button from "../../entities/Button";
 
 interface IParams {
   postId: string;

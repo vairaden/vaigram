@@ -1,8 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { z } from "zod";
-import { registerUser } from "../api/userApi";
-import Button from "../components/ui/Button";
-import FormInput from "../components/ui/FormInput";
+import { registerUser } from "../shared/api/userApi";
+import Button from "../entities/Button";
+import FormInput from "../shared/ui/FormInput";
 
 const Register = () => {
   const [registerError, setRegisterError] = useState<string | null>(null);

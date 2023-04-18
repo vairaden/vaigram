@@ -1,10 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { getProfile } from "../../../api/userApi";
-import UserCard from "../../../components/ui/UserCard";
+import { getProfile } from "../shared/api/userApi";
+import UserCard from "../shared/ui/UserCard";
 
-const Following: NextPage = () => {
+const Following = () => {
   const router = useRouter();
   const profileId = router.query.id as string;
 
