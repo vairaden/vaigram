@@ -37,16 +37,14 @@ const Navbar: FC = () => {
         animate={navVisible || creatorOpened ? "visible" : "hidden"}
         variants={navVariants}
         initial={{ translateX: "-50%" }}
-        className="fixed left-[50%] z-10 w-[24rem] h-[3rem] py-2 px-4
-        flex justify-between rounded-lg shadow-md bg-orange-400 dark:bg-black"
       >
         <Link href="/">
           <a>
-            <h1 className="font-header font-semibold text-xl text-center mr-auto">Vaigram</h1>
+            <h1>Vaigram</h1>
           </a>
         </Link>
         <PlusButton onClick={() => setCreatorOpened((prev) => !prev)} isActive={creatorOpened} />
-        <div className="space-x-4">
+        <div>
           <Button onClick={() => setDarkTheme((prev) => !prev)}>
             {isDarkTheme ? "Dark" : "Light"}
           </Button>
@@ -61,7 +59,7 @@ const Navbar: FC = () => {
           )}
         </div>
       </motion.nav>
-      <div className="h-14"></div>
+      <div></div>
       <PostCreator
         isOpened={creatorOpened}
         closeCallback={() => setCreatorOpened((prev) => !prev)}
@@ -74,7 +72,6 @@ const Navbar: FC = () => {
             exit={{ opacity: 0 }}
             transition={{ type: "tween" }}
             onClick={() => setCreatorOpened(false)}
-            className="fixed z-20 w-[100%] h-[100%] left-0 top-0 bg-black"
           ></motion.div>
         )}
       </AnimatePresence>

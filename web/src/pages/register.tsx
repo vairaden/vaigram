@@ -60,7 +60,7 @@ const Register = () => {
       <Head>
         <title>Register</title>
       </Head>
-      <form onSubmit={handleSubmit} className="flex flex-col">
+      <form onSubmit={handleSubmit}>
         <FormInput
           name="username"
           type="text"

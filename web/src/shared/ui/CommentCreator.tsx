@@ -33,31 +33,24 @@ const CommentCreator: FC<IParams> = ({ postId }) => {
   }
 
   return (
-    <div className="flex flex-col border-black border-2 rounded-lg bg-white overflow-hidden w-[23rem]">
+    <div>
       {user ? (
-        <form
-          onSubmit={handleSubmit}
-          encType="multipart/form-data"
-          className="flex flex-col text-center"
-        >
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <label>
             Add comment
             <textarea
-              className="block my-2 w-full border-2"
               name="description"
               value={comment}
               onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setComment(e.target.value)}
             />
           </label>
-          <Button type="submit" className="w-fit mx-auto my-2">
-            Send
-          </Button>
+          <Button type="submit">Send</Button>
         </form>
       ) : (
-        <div className="px-4">
+        <div>
           <p>You are not logged in to leave comments</p>
           <Link href="/login">
-            <a className="underline text-gray-700">Login</a>
+            <a>Login</a>
           </Link>
         </div>
       )}

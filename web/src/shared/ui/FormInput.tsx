@@ -11,16 +11,9 @@ interface IProps {
 
 const FormInput: FC<IProps> = ({ children, name, type, onChange, value, checked }) => {
   return (
-    <label className="flex flex-col text-left my-2">
+    <label>
       {children}
-      <input
-        name={name}
-        type={type}
-        onChange={onChange}
-        value={value}
-        checked={checked}
-        className="border-black border-2 rounded"
-      />
+      <input name={name} type={type} onChange={onChange} value={value} checked={checked} />
     </label>
   );
 };

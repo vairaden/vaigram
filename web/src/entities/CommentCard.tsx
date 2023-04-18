@@ -55,9 +55,9 @@ const CommentCard: FC<IProps> = ({ commentData, forwardRef }) => {
   }
 
   return (
-    <div ref={forwardRef} className="mb-2 border-black border-2 rounded-lg">
+    <div ref={forwardRef}>
       <p>
-        <strong className="block">{commentData.author.username}</strong>
+        <strong>{commentData.author.username}</strong>
         {commentData.content}
       </p>
       <p>

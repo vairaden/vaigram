@@ -1,14 +1,12 @@
-import { motion } from "framer-motion";
 import { FC, ReactNode } from "react";
 
 interface IProps {
   children: ReactNode;
   isOn: boolean;
   onClick: () => void;
-  className?: string;
 }
 
-const ToggleSwitch: FC<IProps> = ({ children, className, isOn, onClick }) => {
+const ToggleSwitch: FC<IProps> = ({ children, isOn, onClick }) => {
   const switchVariants = {
     on: {
       backgroundColor: "#fb923c",
@@ -27,20 +25,12 @@ const ToggleSwitch: FC<IProps> = ({ children, className, isOn, onClick }) => {
   };
 
   return (
-    <label className={`flex justify-between ${className}`}>
+    <label>
       {children}
-      <motion.div
-        animate={isOn ? "on" : "off"}
-        variants={switchVariants}
-        className="w-[48px] h-[28px] rounded-[24px] p-[4px]"
-      >
-        <motion.div
-          variants={innerVariants}
-          className="w-[20px] h-[20px] bg-white rounded-[40px] shadow-md"
-        />
+      <motion.div animate={isOn ? "on" : "off"} variants={switchVariants}>
+        <motion.div variants={innerVariants} />
       </motion.div>
       <input
-        className="hidden"
         type="toggle"
         checked={isOn}
         onChange={() => {

@@ -88,7 +88,7 @@ const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
       ) : comments.length === 0 ? (
         <h2>Nobody commented this post yet</h2>
       ) : (
-        <ul className="mt-2">
+        <ul>
           {comments.map((comment, index) =>
             index + 1 === comments.length ? (
               <li key={comment.id}>

@@ -1,5 +1,3 @@
-import { motion } from "framer-motion";
-import Image from "next/image";
 import { FC } from "react";
 
 interface IProps {
@@ -9,11 +7,7 @@ interface IProps {
 
 const PlusButton: FC<IProps> = ({ onClick, isActive }) => {
   return (
-    <motion.div
-      onClick={onClick}
-      animate={isActive ? { rotate: 45 } : { rotate: 0 }}
-      className="cursor-pointer"
-    >
+    <div onClick={onClick}>
       <svg
         width="32"
         height="32"
@@ -26,7 +20,7 @@ const PlusButton: FC<IProps> = ({ onClick, isActive }) => {
           <rect id="vertical line" x="30" width="12" height="72" rx="4" fill="#ffff" />
         </g>
       </svg>
-    </motion.div>
+    </div>
   );
 };
 export default PlusButton;

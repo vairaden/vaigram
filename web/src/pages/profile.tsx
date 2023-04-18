@@ -42,29 +42,21 @@ const Profile = () => {
           <Head>
             <title>{profile ? `${profile.firstName} ${profile.lastName}` : "Profile"}</title>
           </Head>
-          <section className="mb-4 flex border-black rounded-lg border-2 overflow-hidden">
+          <section>
             <Image
               width="150px"
               height="150px"
               src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_PATH}/${profile.profilePicture}`}
               alt="Profile picture"
             />
-            <div className="flex flex-col ml-4">
+            <div>
               <h2>{profile.username}</h2>
               <p>{`${profile.firstName} ${profile.lastName}`}</p>
               <Link href={`/users/${profileId}/following`}>
                 <a>Following</a>
               </Link>
-              {user?.id !== profileId && (
-                <Button onClick={follow.mutate} className="mt-auto mb-2">
-                  Follow
-                </Button>
-              )}
-              {user?.id === profileId && (
-                <Button onClick={handleLogout} className="mt-auto mb-2">
-                  Logout
-                </Button>
-              )}
+              {user?.id !== profileId && <Button onClick={follow.mutate}>Follow</Button>}
+              {user?.id === profileId && <Button onClick={handleLogout}>Logout</Button>}
             </div>
           </section>
           <PostList limit={4} authorId={profileId} allowPostDeletion={user?.id === profileId} />

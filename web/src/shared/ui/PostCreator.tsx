@@ -53,15 +53,11 @@ const PostCreator: FC<IProps> = ({ isOpened, closeCallback }) => {
     setPostImage(null);
   }
   return (
-    <aside className="flex flex-col fixed z-30 left-[50%] translate-x-[-50%] translate-y-8">
+    <aside>
       <DropdownAnimation isOpen={isOpened}>
-        <div className="border-black border-2 rounded-lg bg-white overflow-hidden w-[23rem]">
+        <div>
           {user ? (
-            <form
-              onSubmit={handleSubmit}
-              encType="multipart/form-data"
-              className="flex flex-col text-center"
-            >
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
               {postImage && (
                 <Image
                   width="800px"
@@ -70,12 +66,9 @@ const PostCreator: FC<IProps> = ({ isOpened, closeCallback }) => {
                   alt="Selected image"
                 />
               )}
-              <label className="my-2">
-                <span className="border-2 rounded border-black bg-orange-200 cursor-pointer">
-                  Choose image
-                </span>
+              <label>
+                <span>Choose image</span>
                 <input
-                  className="hidden"
                   type="file"
                   accept="image/*"
                   name="postImage"
@@ -87,7 +80,6 @@ const PostCreator: FC<IProps> = ({ isOpened, closeCallback }) => {
               <label>
                 Description
                 <textarea
-                  className="block my-2 w-full border-2"
                   name="description"
                   value={postDescription}
                   onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
@@ -95,24 +87,16 @@ const PostCreator: FC<IProps> = ({ isOpened, closeCallback }) => {
                   }
                 />
               </label>
-              <ToggleSwitch
-                className="p-2"
-                isOn={profilePic}
-                onClick={() => setProfilePic((prev) => !prev)}
-              >
+              <ToggleSwitch isOn={profilePic} onClick={() => setProfilePic((prev) => !prev)}>
                 Set as profile picture
               </ToggleSwitch>
-              <Button type="submit" className="w-fit mx-auto my-2">
-                Create post
-              </Button>
+              <Button type="submit">Create post</Button>
             </form>
           ) : (
-            <div className="px-4">
+            <div>
               <p>You are not logged in</p>
               <Link href="/login">
-                <a onClick={closeCallback} className="underline text-gray-700">
-                  Login
-                </a>
+                <a onClick={closeCallback}>Login</a>
               </Link>
             </div>
           )}

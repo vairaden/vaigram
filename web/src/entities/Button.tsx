@@ -4,16 +4,11 @@ interface IProps {
   children: ReactNode;
   type?: "button" | "submit" | "reset" | undefined;
   onClick?: () => void;
-  className?: string;
 }
 
-const Button: FC<IProps> = ({ children, onClick, type, className }) => {
+const Button: FC<IProps> = ({ children, onClick, type }) => {
   return (
-    <button
-      type={type}
-      onClick={onClick}
-      className={`px-2 border-2 rounded border-black bg-orange-200 cursor-pointer ${className}`}
-    >
+    <button type={type} onClick={onClick}>
       {children}
     </button>
   );

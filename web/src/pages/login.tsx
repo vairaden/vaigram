@@ -41,8 +41,8 @@ const Login = () => {
       <Head>
         <title>Login</title>
       </Head>
-      <div className="flex flex-col">
-        <form onSubmit={submitLogin} className="flex flex-col">
+      <div>
+        <form onSubmit={submitLogin}>
           <FormInput
             name="username"
             type="text"
@@ -64,7 +64,7 @@ const Login = () => {
           <Button type="submit">Login</Button>
         </form>
         <Link href="/register">
-          <a className="text-gray-700 underline mx-auto">Or register</a>
+          <a>Or register</a>
         </Link>
       </div>
     </>

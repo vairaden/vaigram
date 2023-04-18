@@ -1,15 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Image from "next/image";
-import { FC } from "react";
 import { getProfile, unfollowUser } from "../api/userApi";
 import Button from "../../entities/Button";
 
-interface IProps {
-  userId: string;
-  profileId: string;
-}
-
-const UserCard: FC<IProps> = ({ userId, profileId }) => {
+export default function UserCard({ userId, profileId }: { userId: string; profileId: string }) {
   const queryClient = useQueryClient();
 
   const {
@@ -38,14 +30,13 @@ const UserCard: FC<IProps> = ({ userId, profileId }) => {
       ) : !profile ? (
         <h2>Not logged in</h2>
       ) : (
-        <article className="flex border-2 border-black rounded-md">
-          <Image
-            className="rounded-[40px]"
+        <article>
+          {/* <Image
             width="40px"
             height="40px"
             src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_PATH}/${profile.profilePicture}`}
             alt="Profile pic"
-          />
+          /> */}
           <p>
             <h2>{profile.username}</h2>
             {profile.firstName} {profile.lastName}
@@ -55,6 +46,4 @@ const UserCard: FC<IProps> = ({ userId, profileId }) => {
       )}
     </>
   );
-};
-
-export default UserCard;
+}

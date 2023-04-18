@@ -63,19 +63,18 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
   const date = `${unixDate.getHours()}:${unixDate.getMinutes()} / ${unixDate.getDate()}.${unixDate.getMonth()}.${unixDate.getFullYear()}`;
 
   return (
-    <article className="mb-4 border-black border-2 rounded-lg" ref={forwardRef}>
-      <div className="flex m-1 justify-between">
+    <article ref={forwardRef}>
+      <div>
         <Link href={`/users/${postData.author.id}`}>
-          <a className="flex">
-            <Image
-              className="rounded-[40px]"
-              width="40px"
-              height="40px"
-              src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_PATH}/${postData.author.profilePicture}`}
-              alt="Profile pic"
-            />
-            <h2 className="pt-2 mx-1">{postData.author.username}</h2>
-            <p className="pt-[14px] text-xs text-gray-600">{date}</p>
+          <a>
+            {/* // <Image
+            //   width="40px"
+            //   height="40px"
+            //   src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_PATH}/${postData.author.profilePicture}`}
+            //   alt="Profile pic"
+            // /> */}
+            <h2>{postData.author.username}</h2>
+            <p>{date}</p>
           </a>
         </Link>
         {allowDeletion && (
@@ -90,7 +89,7 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
         src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_PATH}/${postData.image}`}
         alt={postData.description}
       />
-      <div className="flex justify-between mx-1">
+      <div>
         <p>
           {postData.likes} likes {postData.dislikes} dislikes
         </p>
@@ -102,12 +101,12 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
         </Button>
       </div>
       <p>
-        <strong className="mx-1 font-bold">{postData.author.username}</strong>
+        <strong>{postData.author.username}</strong>
         {postData.description}
       </p>
 
       <Link href={`/posts/${postData.id}`}>
-        <a className="m-1">View more...</a>
+        <a>View more...</a>
       </Link>
     </article>
   );
