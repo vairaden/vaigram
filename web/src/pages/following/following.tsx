@@ -1,5 +1,5 @@
-import { getProfile } from "../shared/api/userApi";
-import UserCard from "../shared/ui/UserCard";
+import { getProfile } from "../../shared/api/userApi";
+import UserCard from "../../entities/UserCard";
 
 const Following = () => {
   const router = useRouter();

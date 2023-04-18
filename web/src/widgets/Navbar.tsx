@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { FC, useEffect, useState } from "react";
-import { refreshAccess } from "../api/authApi";
+import { refreshAccess } from "../shared/api/authApi";
 import useTheme from "../../hooks/useTheme";
-import Button from "../../entities/Button";
+import Button from "../shared/ui/Button";
 import PostCreator from "./PostCreator";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
-import PlusButton from "./PlusButton";
+import PlusButton from "../shared/ui/PlusButton";
 
 const Navbar: FC = () => {
   const [isDarkTheme, setDarkTheme] = useTheme();

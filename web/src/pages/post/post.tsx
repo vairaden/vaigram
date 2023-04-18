@@ -1,6 +1,6 @@
-import { getOnePost } from "../shared/api/postApi";
-import CommentCreator from "../shared/ui/CommentCreator";
-import CommentList from "../shared/ui/CommentList";
+import { getOnePost } from "../../shared/api/postApi";
+import CommentCreator from "../../widgets/CommentCreator";
+import CommentList from "../../widgets/CommentList";
 
 const Post = () => {
   const router = useRouter();

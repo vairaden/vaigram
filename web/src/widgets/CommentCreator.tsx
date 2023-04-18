@@ -1,16 +1,10 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
-import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { z } from "zod";
-import { refreshAccess } from "../api/authApi";
-import { createComment } from "../api/commentApi";
-import Button from "../../entities/Button";
+import { refreshAccess } from "../shared/api/authApi";
+import { createComment } from "../shared/api/commentApi";
+import Button from "../shared/ui/Button";
 
-interface IParams {
-  postId: string;
-}
-
-const CommentCreator: FC<IParams> = ({ postId }) => {
+export default function CommentCreator({ postId }: { postId: string }) {
   const [comment, setComment] = useState("");
 
   const commentValidator = z.string().max(1000);
@@ -56,5 +50,4 @@ const CommentCreator: FC<IParams> = ({ postId }) => {
       )}
     </div>
   );
-};
-export default CommentCreator;
+}

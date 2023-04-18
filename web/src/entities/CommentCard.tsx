@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FC } from "react";
 import { dislikeComment, likeComment } from "../shared/api/commentApi";
-import Button from "./Button";
+import Button from "../shared/ui/Button";
 
 interface IComment {
   id: string;

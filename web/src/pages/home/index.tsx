@@ -1,4 +1,4 @@
-import PostList from "../shared/ui/PostList";
+import PostList from "../../widgets/PostList";
 
 const Home = () => {
   return <PostList limit={5} pagesToKeep={4} />;

@@ -1,5 +1,5 @@
-import { getProfile, unfollowUser } from "../api/userApi";
-import Button from "../../entities/Button";
+import { getProfile, unfollowUser } from "../shared/api/userApi";
+import Button from "../shared/ui/Button";
 
 export default function UserCard({ userId, profileId }: { userId: string; profileId: string }) {
   const queryClient = useQueryClient();

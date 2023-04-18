@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createPost } from "../api/postApi";
+import { createPost } from "../shared/api/postApi";
 import Image from "next/image";
-import Button from "../../entities/Button";
-import { refreshAccess } from "../api/authApi";
+import Button from "../shared/ui/Button";
+import { refreshAccess } from "../shared/api/authApi";
 import DropdownAnimation from "../animations/DropdownAnimation";
-import ToggleSwitch from "./ToggleSwitch";
-import { setProfilePicture } from "../api/userApi";
+import ToggleSwitch from "../shared/ui/ToggleSwitch";
+import { setProfilePicture } from "../shared/api/userApi";
 
 interface IProps {
   isOpened: boolean;

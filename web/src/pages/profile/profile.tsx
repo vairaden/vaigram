@@ -1,7 +1,7 @@
-import { logoutUser, refreshAccess } from "../shared/api/authApi";
-import { followUser, getProfile } from "../shared/api/userApi";
-import Button from "../entities/Button";
-import PostList from "../shared/ui/PostList";
+import { logoutUser, refreshAccess } from "../../shared/api/authApi";
+import { followUser, getProfile } from "../../shared/api/userApi";
+import Button from "../../shared/ui/Button";
+import PostList from "../../widgets/PostList";
 
 const Profile = () => {
   const queryClient = useQueryClient();

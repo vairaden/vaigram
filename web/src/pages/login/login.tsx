@@ -1,8 +1,8 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { z } from "zod";
-import { loginUser, refreshAccess } from "../shared/api/authApi";
-import Button from "../entities/Button";
-import FormInput from "../shared/ui/FormInput";
+import { loginUser, refreshAccess } from "../../shared/api/authApi";
+import Button from "../../shared/ui/Button";
+import FormInput from "../../shared/ui/FormInput";
 
 const Login = () => {
   const queryClient = useQueryClient();
