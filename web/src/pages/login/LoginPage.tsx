@@ -3,8 +3,9 @@ import { z } from "zod";
 import { loginUser, refreshAccess } from "../../shared/api/authApi";
 import Button from "../../shared/ui/Button";
 import FormInput from "../../shared/ui/FormInput";
+import { Link } from "react-router-dom";
 
-const Login = () => {
+export default function LoginPage() {
   const queryClient = useQueryClient();
   const router = useRouter();
 
@@ -63,12 +64,8 @@ const Login = () => {
           </FormInput>
           <Button type="submit">Login</Button>
         </form>
-        <Link href="/register">
-          <a>Or register</a>
-        </Link>
+        <Link to="/register">Or register</Link>
       </div>
     </>
   );
-};
-
-export default Login;
+}

@@ -1,20 +1,19 @@
-import Link from "next/link";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createPost } from "../shared/api/postApi";
-import Image from "next/image";
 import Button from "../shared/ui/Button";
 import { refreshAccess } from "../shared/api/authApi";
 import DropdownAnimation from "../animations/DropdownAnimation";
 import ToggleSwitch from "../shared/ui/ToggleSwitch";
 import { setProfilePicture } from "../shared/api/userApi";
+import { Link } from "react-router-dom";
 
-interface IProps {
+export default function PostCreator({
+  isOpened,
+  closeCallback,
+}: {
   isOpened: boolean;
   closeCallback: () => void;
-}
-
-const PostCreator: FC<IProps> = ({ isOpened, closeCallback }) => {
+}) {
   const queryClient = useQueryClient();
 
   const [postImage, setPostImage] = useState<File | null>(null);
@@ -95,8 +94,8 @@ const PostCreator: FC<IProps> = ({ isOpened, closeCallback }) => {
           ) : (
             <div>
               <p>You are not logged in</p>
-              <Link href="/login">
-                <a onClick={closeCallback}>Login</a>
+              <Link onClick={closeCallback} to="/login">
+                Login
               </Link>
             </div>
           )}
@@ -104,6 +103,4 @@ const PostCreator: FC<IProps> = ({ isOpened, closeCallback }) => {
       </DropdownAnimation>
     </aside>
   );
-};
-
-export default PostCreator;
+}

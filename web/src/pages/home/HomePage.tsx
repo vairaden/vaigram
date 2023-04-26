@@ -1,7 +1,5 @@
 import PostList from "../../widgets/PostList";
 
-const Home = () => {
+export default function HomePage() {
   return <PostList limit={5} pagesToKeep={4} />;
-};
-
-export default Home;
+}

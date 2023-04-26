@@ -2,7 +2,7 @@ import { getOnePost } from "../../shared/api/postApi";
 import CommentCreator from "../../widgets/CommentCreator";
 import CommentList from "../../widgets/CommentList";
 
-const Post = () => {
+export default function PostPage() {
   const router = useRouter();
   const id = router.query.id as string;
 
@@ -37,5 +37,4 @@ const Post = () => {
       )}
     </>
   );
-};
-export default Post;
+}

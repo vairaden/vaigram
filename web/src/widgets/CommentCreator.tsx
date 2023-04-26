@@ -3,6 +3,7 @@ import { z } from "zod";
 import { refreshAccess } from "../shared/api/authApi";
 import { createComment } from "../shared/api/commentApi";
 import Button from "../shared/ui/Button";
+import { Link } from "react-router-dom";
 
 export default function CommentCreator({ postId }: { postId: string }) {
   const [comment, setComment] = useState("");
@@ -43,9 +44,7 @@ export default function CommentCreator({ postId }: { postId: string }) {
       ) : (
         <div>
           <p>You are not logged in to leave comments</p>
-          <Link href="/login">
-            <a>Login</a>
-          </Link>
+          <Link to="/login">Login</Link>
         </div>
       )}
     </div>

@@ -1,7 +1,7 @@
-import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
-import { FC, useCallback, useMemo, useRef } from "react";
+import { FC, useCallback, useMemo, useRef, useState } from "react";
 import { getMultipleComments } from "../shared/api/commentApi";
 import CommentCard from "../entities/CommentCard";
+import { useGetCommentsQuery } from "../shared/store/apiSlice";
 
 interface IComment {
   id: string;
@@ -20,29 +20,17 @@ interface IComment {
   updatedAt: Date;
 }
 
-interface IProps {
+export default function CommentList({
+  limit,
+  pagesToKeep,
+  postId,
+}: {
   limit: number;
   pagesToKeep?: number;
   postId: string;
-}
-
-const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
-  const queryClient = useQueryClient();
-
-  const { isLoading, data, error, fetchNextPage, hasNextPage } = useInfiniteQuery(
-    ["comments", postId],
-    ({ pageParam = { postId, limit, cursor: null } }) => getMultipleComments(pageParam),
-    {
-      getNextPageParam: (lastPage) =>
-        lastPage.nextCursor
-          ? {
-              postId,
-              limit,
-              cursor: lastPage.nextCursor,
-            }
-          : undefined,
-    }
-  );
+}) {
+  const [cursor, setCursor] = useState(0);
+  const { data, isLoading, isError } = useGetCommentsQuery({ postId, cursor, limit });
 
   const observer = useRef<IntersectionObserver | null>(null);
   const lastCommentRef = useCallback(
@@ -52,45 +40,27 @@ const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
       if (observer.current) observer.current.disconnect();
 
       observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasNextPage) {
-          queryClient.setQueryData(["comments", postId], (data: any) =>
-            data.pages.length === pagesToKeep
-              ? {
-                  pages: data.pages.slice(1),
-                  pageParams: data.pageParams.slice(1),
-                }
-              : data
-          );
-          fetchNextPage();
+        if (entries[0].isIntersecting && data && data.hasNextPage) {
+          setCursor(data.cursor);
         }
       });
       if (node) observer.current.observe(node);
     },
-    [fetchNextPage, hasNextPage, isLoading, pagesToKeep, postId, queryClient]
+    [isLoading, pagesToKeep, postId]
   );
-
-  const comments = useMemo(() => {
-    let commentList: IComment[] = [];
-    if (data) {
-      for (let page of data.pages) {
-        commentList = [...commentList, ...page.comments];
-      }
-    }
-    return commentList;
-  }, [data]);
 
   return (
     <>
       {isLoading ? (
         <h2>Loading</h2>
-      ) : error || !data ? (
+      ) : isError || !data ? (
         <h2>Error connecting to server</h2>
-      ) : comments.length === 0 ? (
+      ) : data.comments.length === 0 ? (
         <h2>Nobody commented this post yet</h2>
       ) : (
         <ul>
-          {comments.map((comment, index) =>
-            index + 1 === comments.length ? (
+          {data.comments.map((comment, index, array) =>
+            index + 1 === array.length ? (
               <li key={comment.id}>
                 <CommentCard commentData={comment} forwardRef={lastCommentRef} />
               </li>
@@ -104,6 +74,4 @@ const CommentList: FC<IProps> = ({ limit, pagesToKeep, postId }) => {
       )}
     </>
   );
-};
-
-export default CommentList;
+}

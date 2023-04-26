@@ -1,9 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Image from "next/image";
-import Link from "next/link";
-import { FC } from "react";
 import { deletePost, dislikePost, likePost } from "../shared/api/postApi";
 import Button from "../shared/ui/Button";
+import { Link } from "react-router-dom";
 
 interface IPost {
   id: string;
@@ -20,13 +17,15 @@ interface IPost {
   updatedAt: Date;
 }
 
-interface IProps {
+export default function PostCard({
+  postData,
+  forwardRef,
+  allowDeletion = false,
+}: {
   postData: IPost;
   forwardRef?: (node: HTMLElement) => void;
   allowDeletion?: boolean;
-}
-
-const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) => {
+}) {
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation((postId: string) => deletePost(postId), {
@@ -65,17 +64,15 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
   return (
     <article ref={forwardRef}>
       <div>
-        <Link href={`/users/${postData.author.id}`}>
-          <a>
-            {/* // <Image
+        <Link to={`/users/${postData.author.id}`}>
+          {/* // <Image
             //   width="40px"
             //   height="40px"
             //   src={`${process.env.NEXT_PUBLIC_IMAGE_BASE_PATH}/${postData.author.profilePicture}`}
             //   alt="Profile pic"
             // /> */}
-            <h2>{postData.author.username}</h2>
-            <p>{date}</p>
-          </a>
+          <h2>{postData.author.username}</h2>
+          <p>{date}</p>
         </Link>
         {allowDeletion && (
           <Button type="button" onClick={handleDelete}>
@@ -105,11 +102,7 @@ const PostCard: FC<IProps> = ({ postData, forwardRef, allowDeletion = false }) =
         {postData.description}
       </p>
 
-      <Link href={`/posts/${postData.id}`}>
-        <a>View more...</a>
-      </Link>
+      <Link to={`/posts/${postData.id}`}>View more...</Link>
     </article>
   );
-};
-
-export default PostCard;
+}

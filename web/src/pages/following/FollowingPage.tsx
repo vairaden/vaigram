@@ -1,7 +1,7 @@
 import { getProfile } from "../../shared/api/userApi";
 import UserCard from "../../entities/UserCard";
 
-const Following = () => {
+export default function FollowingPage() {
   const router = useRouter();
   const profileId = router.query.id as string;
 
@@ -28,6 +28,4 @@ const Following = () => {
       )}
     </>
   );
-};
-
-export default Following;
+}

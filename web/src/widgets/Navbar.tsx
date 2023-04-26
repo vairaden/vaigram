@@ -1,14 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { FC, useEffect, useState } from "react";
 import { refreshAccess } from "../shared/api/authApi";
 import useTheme from "../../hooks/useTheme";
 import Button from "../shared/ui/Button";
 import PostCreator from "./PostCreator";
-import { AnimatePresence, motion, useScroll } from "framer-motion";
 import PlusButton from "../shared/ui/PlusButton";
+import { Link } from "react-router-dom";
 
-const Navbar: FC = () => {
+export default function Navbar() {
   const [isDarkTheme, setDarkTheme] = useTheme();
   const [creatorOpened, setCreatorOpened] = useState(false);
 
@@ -38,10 +36,8 @@ const Navbar: FC = () => {
         variants={navVariants}
         initial={{ translateX: "-50%" }}
       >
-        <Link href="/">
-          <a>
-            <h1>Vaigram</h1>
-          </a>
+        <Link to="/">
+          <h1>Vaigram</h1>
         </Link>
         <PlusButton onClick={() => setCreatorOpened((prev) => !prev)} isActive={creatorOpened} />
         <div>
@@ -49,13 +45,9 @@ const Navbar: FC = () => {
             {isDarkTheme ? "Dark" : "Light"}
           </Button>
           {user ? (
-            <Link href={`/users/${user.id}`}>
-              <a>{user.username}</a>
-            </Link>
+            <Link to={`/users/${user.id}`}>{user.username}</Link>
           ) : (
-            <Link href="/login">
-              <a>Login</a>
-            </Link>
+            <Link to="/login">Login</Link>
           )}
         </div>
       </motion.nav>
@@ -77,5 +69,4 @@ const Navbar: FC = () => {
       </AnimatePresence>
     </>
   );
-};
-export default Navbar;
+}
