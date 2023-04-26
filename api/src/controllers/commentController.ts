@@ -1,63 +1,54 @@
-import { Request, Response } from "express";
-import asyncHandler from "express-async-handler";
+import expressAsyncHandler from "express-async-handler";
+import prisma from "../prisma";
 
-import CommentModel from "../models/comments";
-import PostModel from "../models/posts";
-import UserModel from "../models/users";
-
-const getMultipleComments = asyncHandler(async (req: Request, res: Response) => {
+const getComments = expressAsyncHandler(async (req, res) => {
   try {
     const limit = Number(req.query.limit);
-    const cursor = req.query.cursor ? req.query.cursor.toString() : null;
 
-    if (cursor) {
-      const comments = await CommentModel.find({
-        createdAt: { $lt: new Date(cursor) },
-        post: req.params.postId,
-      })
-        .sort({
-          createdAt: "descending",
-        })
-        .limit(Number(req.params.limit))
-        .populate("author", ["id", "profilePicture", "username"])
-        .populate("post", ["id"]);
+    const comments = await prisma.comment.findMany({
+      cursor: { id: req.query.cursor ? Number(req.query.cursor) : 0 },
+      take: Number(req.params.limit),
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            profilePicture: true,
+            username: true,
+          },
+        },
+        post: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
 
-      const hasMore = comments.length === limit;
-      const nextCursor = hasMore ? comments[limit - 1].createdAt.toString() : null;
+    const hasMore = comments.length === limit;
+    const nextCursor = hasMore ? comments[limit - 1].id : null;
 
-      res.status(200).json({ comments, nextCursor });
-    } else {
-      const comments = await CommentModel.find({
-        post: req.params.postId,
-      })
-        .sort({
-          createdAt: "descending",
-        })
-        .limit(limit)
-        .populate("author", ["id", "profilePicture", "username"])
-        .populate("post", ["id"]);
-
-      const hasMore = comments.length === limit;
-      const nextCursor = hasMore ? comments[limit - 1].createdAt : null;
-
-      res.status(200).json({ comments, nextCursor });
-    }
+    res.status(200).json({ comments, nextCursor });
   } catch (err: any) {
     res.status(400).json({ message: err.message });
   }
 });
 
-const createComment = asyncHandler(async (req: Request, res: Response) => {
+const createComment = expressAsyncHandler(async (req, res) => {
   try {
-    const user = await UserModel.findById(req.userId);
-    if (!user) throw new Error("User not found");
-    const post = await PostModel.findById(req.params.postId);
-    if (!post) throw new Error("Post not found");
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: req.userId } });
+    const post = await prisma.post.findUniqueOrThrow({
+      where: { id: Number(req.params.postId) },
+    });
 
-    await CommentModel.create({
-      author: user.id,
-      post: post.id,
-      content: req.body.comment,
+    await prisma.comment.create({
+      data: {
+        authorId: user.id,
+        postId: post.id,
+        content: req.body.comment,
+      },
     });
 
     res.status(200).json({ message: "Comment created" });
@@ -66,35 +57,56 @@ const createComment = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-const likeComment = asyncHandler(async (req: Request, res: Response) => {
+const getCommentLikes = expressAsyncHandler(async (req, res) => {
   try {
-    const comment = await CommentModel.findById(req.params.commentId);
+    const comment = await prisma.comment.findUniqueOrThrow({
+      where: { id: Number(req.params.commentId) },
+    });
 
     if (!comment) throw new Error("Post not found");
 
-    await CommentModel.findByIdAndUpdate(req.params.commentId, { likes: comment.likes + 1 });
+    const commentLikes = await prisma.commentLike.findMany({ where: { userId: req.userId } });
+    res.status(200).json({ commentLikes });
+  } catch (err: any) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+const likeComment = expressAsyncHandler(async (req, res) => {
+  try {
+    const comment = await prisma.comment.findUniqueOrThrow({
+      where: { id: Number(req.params.commentId) },
+    });
+
+    if (!comment) throw new Error("Post not found");
+
+    await prisma.commentLike.create({ data: { commentId: comment.id, userId: req.userId! } });
     res.status(200).json({ message: "Comment liked" });
   } catch (err: any) {
     res.status(400).json({ message: err.message });
   }
 });
 
-const dislikeComment = asyncHandler(async (req: Request, res: Response) => {
+const deleteCommentLike = expressAsyncHandler(async (req, res) => {
   try {
-    const comment = await CommentModel.findById(req.params.commentId);
-
-    if (!comment) throw new Error("Post not found");
-
-    await CommentModel.findByIdAndUpdate(req.params.commentId, { dislikes: comment.dislikes + 1 });
+    await prisma.commentLike.delete({
+      where: {
+        userId_commentId: {
+          userId: req.userId!,
+          commentId: Number(req.params.commentId),
+        },
+      },
+    });
     res.status(200).json({ message: "Comment disliked" });
   } catch (err: any) {
     res.status(400).json({ message: err.message });
   }
 });
 
-const deleteComment = asyncHandler(async (req: Request, res: Response) => {
+const deleteComment = expressAsyncHandler(async (req, res) => {
   try {
-    await CommentModel.findByIdAndDelete(req.params.commentId);
+    const commentId = Number(req.params.commentId);
+    await prisma.comment.delete({ where: { id: commentId } });
 
     res.status(200).json({ message: "Comment deleted" });
   } catch (err: any) {
@@ -102,10 +114,11 @@ const deleteComment = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-export default {
-  getMultipleComments,
+export {
+  getComments,
   createComment,
-  likeComment,
-  dislikeComment,
   deleteComment,
+  getCommentLikes,
+  likeComment,
+  deleteCommentLike,
 };

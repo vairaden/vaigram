@@ -1,10 +1,8 @@
-import { Request, Response } from "express";
-import asyncHandler from "express-async-handler";
+import expressAsyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
+import prisma from "../prisma";
 
-import UserModel from "../models/users";
-
-const protect = asyncHandler(async (req: Request, res: Response, next: Function) => {
+const protect = expressAsyncHandler(async (req, res, next) => {
   try {
     if (!req.headers.authorization || !req.headers.authorization.startsWith("Bearer"))
       throw new Error("No authorization header");
@@ -12,10 +10,9 @@ const protect = asyncHandler(async (req: Request, res: Response, next: Function)
     const token = req.headers.authorization.split(" ")[1];
     if (!token) throw new Error("No access token");
 
-    const { userId } = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as { userId: string };
+    const { userId } = jwt.verify(token, process.env.JWT_ACCESS_SECRET) as { userId: number };
 
-    const user = await UserModel.findById(userId).select("-password");
-    if (!user) throw new Error("No user found");
+    await prisma.user.findUniqueOrThrow({ where: { id: userId } });
 
     req.userId = userId;
 

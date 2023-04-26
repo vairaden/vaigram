@@ -1,13 +1,13 @@
 import express from "express";
-import authController from "../controllers/authController";
 import protect from "../middlewares/authMiddleware";
+import { handleRefreshToken, loginUser, logoutUser } from "../controllers/authController";
 
-const router = express.Router();
+const authRoutes = express.Router();
 
-router.get("/refresh", authController.handleRefreshToken);
+authRoutes.get("/refresh", handleRefreshToken);
 
-router.post("/", authController.loginUser);
+authRoutes.post("/", loginUser);
 
-router.delete("/", protect, authController.logoutUser);
+authRoutes.delete("/", protect, logoutUser);
 
-export default router;
+export default authRoutes;

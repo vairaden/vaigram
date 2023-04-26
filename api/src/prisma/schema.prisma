@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int           @id @default(autoincrement())
+  username       String        @unique
+  email          String        @unique
+  firstName      String
+  lastName       String
+  password       String
+  profilePicture String?
+  posts          Post[]
+  comments       Comment[]
+  likedComments  CommentLike[]
+  likedPosts     PostLike[]
+  tokens         Token[]
+  following      Follow[]      @relation("follower")
+  followedBy     Follow[]      @relation("followedBy")
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Follow {
+  follower   User @relation("follower", fields: [followerId], references: [id])
+  followerId Int
+  followed   User @relation("followedBy", fields: [followedId], references: [id])
+  followedId Int
+
+  @@id([followerId, followedId])
+}
+
+model Token {
+  id           Int    @id @default(autoincrement())
+  refreshToken String @unique
+  user         User   @relation(fields: [userId], references: [id])
+  userId       Int
+}
+
+model Post {
+  id          Int        @id @default(autoincrement())
+  description String
+  image       String
+  author      User       @relation(fields: [authorId], references: [id])
+  authorId    Int
+  likes       PostLike[]
+  comments    Comment[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model PostLike {
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  post   Post @relation(fields: [postId], references: [id])
+  postId Int
+
+  @@id([userId, postId])
+}
+
+model Comment {
+  id        Int           @id @default(autoincrement())
+  content   String
+  likes     CommentLike[]
+  post      Post          @relation(fields: [postId], references: [id])
+  postId    Int
+  author    User          @relation(fields: [authorId], references: [id])
+  authorId  Int
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model CommentLike {
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  comment   Comment @relation(fields: [commentId], references: [id])
+  commentId Int
+
+  @@id([userId, commentId])
+}

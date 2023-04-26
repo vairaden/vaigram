@@ -1,8 +1,0 @@
-node_modules
-yarn-error.log
-Dockerfile
-.dockerignore
-README.md
-.next
-.git
-out

@@ -1,18 +1,27 @@
 import express from "express";
 
-import commentController from "../controllers/commentController";
 import protect from "../middlewares/authMiddleware";
+import {
+  createComment,
+  deleteComment,
+  deleteCommentLike,
+  getCommentLikes,
+  getComments,
+  likeComment,
+} from "../controllers/commentController";
 
-const router = express.Router();
+const commentRoutes = express.Router();
 
-router.post("/:postId/comments", protect, commentController.createComment);
+commentRoutes.post("/:postId/comments", protect, createComment);
 
-router.get("/:postId/comments", commentController.getMultipleComments);
+commentRoutes.get("/:postId/comments", getComments);
 
-router.delete("/:postId/comments", protect, commentController.deleteComment);
+commentRoutes.delete("/:postId/comments", protect, deleteComment);
 
-router.post("/:postId/comments/:commentId/likes", protect, commentController.likeComment);
+commentRoutes.get("/:postId/comments/:commentId/likes", getCommentLikes);
 
-router.post("/:postId/comments/:commentId/dislikes", protect, commentController.dislikeComment);
+commentRoutes.post("/:postId/comments/:commentId/likes", protect, likeComment);
 
-export default router;
+commentRoutes.delete("/:postId/comments/:commentId/likes", protect, deleteCommentLike);
+
+export default commentRoutes;

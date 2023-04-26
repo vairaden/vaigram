@@ -1,21 +1,28 @@
 import express from "express";
 
-import postController from "../controllers/postController";
 import protect from "../middlewares/authMiddleware";
 import upload from "../middlewares/storageMiddleware";
+import {
+  createPost,
+  deletePostById,
+  deletePostLike,
+  getMultiplePosts,
+  getPostById,
+  likePost,
+} from "../controllers/postController";
 
-const router = express.Router();
+const postRoutes = express.Router();
 
-router.get("/", postController.getMultiplePosts);
+postRoutes.get("/", getMultiplePosts);
 
-router.get("/:postId", postController.getPostById);
+postRoutes.get("/:postId", getPostById);
 
-router.post("/", protect, upload.single("postImage"), postController.createPost);
+postRoutes.post("/", protect, upload.single("postImage"), createPost);
 
-router.post("/:postId/likes", protect, postController.likePost);
+postRoutes.post("/:postId/likes", protect, likePost);
 
-router.post("/:postId/dislikes", protect, postController.dislikePost);
+postRoutes.post("/:postId/dislikes", protect, deletePostLike);
 
-router.delete("/:postId", protect, postController.deletePostById);
+postRoutes.delete("/:postId", protect, deletePostById);
 
-export default router;
+export default postRoutes;

@@ -1,28 +1,27 @@
 import bcrypt from "bcryptjs";
-import { Request, Response } from "express";
-import asyncHandler from "express-async-handler";
-import PostModel from "../models/posts";
+import expressAsyncHandler from "express-async-handler";
+import prisma from "../prisma";
+import { deleteRefreshToken, generateTokens, storeRefreshToken } from "../services/tokenService";
 
-import UserModel from "../models/users";
-import tokenService from "../services/tokenService";
-
-const registerUser = asyncHandler(async (req: Request, res: Response) => {
+const registerUser = expressAsyncHandler(async (req, res) => {
   try {
     const { username, firstName, lastName, email, password } = req.body;
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await UserModel.create({
-      username,
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
+    const user = await prisma.user.create({
+      data: {
+        username,
+        firstName,
+        lastName,
+        email,
+        password: hashedPassword,
+      },
     });
 
-    const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user.id });
-    await tokenService.storeRefreshToken(user.id, refreshToken);
+    const { accessToken, refreshToken } = generateTokens({ userId: user.id });
+    await storeRefreshToken(user.id, refreshToken);
 
     res
       .status(201)
@@ -45,9 +44,9 @@ const registerUser = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-const getProfile = asyncHandler(async (req: Request, res: Response) => {
+const getProfile = expressAsyncHandler(async (req, res) => {
   try {
-    const user = await UserModel.findById(req.params.userId);
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: req.userId } });
 
     if (!user) throw new Error("User not found");
 
@@ -57,7 +56,6 @@ const getProfile = asyncHandler(async (req: Request, res: Response) => {
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
-      following: user.following,
       createdAt: user.createdAt,
     });
   } catch (err: any) {
@@ -65,20 +63,22 @@ const getProfile = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-const setProfilePicture = asyncHandler(async (req: Request, res: Response) => {
+const setProfilePicture = expressAsyncHandler(async (req, res) => {
   try {
     if (!req.file) throw new Error("No file attached");
 
-    const user = await UserModel.findById(req.userId);
-    if (!user) throw new Error("User not found");
-
-    await PostModel.create({
-      author: req.userId,
-      description: req.body.description,
-      image: req.file.filename,
+    await prisma.post.create({
+      data: {
+        authorId: req.userId!,
+        description: req.body.description,
+        image: req.file.filename,
+      },
     });
 
-    await UserModel.findByIdAndUpdate(req.userId, { profilePicture: req.file.filename });
+    await prisma.user.update({
+      where: { id: req.userId },
+      data: { profilePicture: req.file.filename },
+    });
 
     res.status(200).json({ message: "Profile picture set" });
   } catch (err: any) {
@@ -86,47 +86,13 @@ const setProfilePicture = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-const followUser = asyncHandler(async (req: Request, res: Response) => {
+const deleteUser = expressAsyncHandler(async (req, res) => {
   try {
-    const user = await UserModel.findById(req.userId);
-    const othUser = await UserModel.findById(req.params.othUserId);
-
-    if (!user || !othUser) throw new Error("User not found");
-    if (user.following.includes(othUser.id)) throw new Error("Following already");
-
-    await UserModel.findByIdAndUpdate(user.id, { following: [...user.following, othUser] });
-
-    res.status(200).json({ message: `${user.username} is following ${othUser.username} now` });
-  } catch (err: any) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
-const unfollowUser = asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const user = await UserModel.findById(req.userId);
-    const othUser = await UserModel.findById(req.params.othUserId);
-
-    if (user === null || othUser === null) throw new Error("User not found");
-    if (!user.following.includes(othUser.id)) throw new Error("Not following yet");
-
-    await UserModel.findByIdAndUpdate(user.id, {
-      following: user.following.filter((value) => value.toString() !== othUser.id),
-    });
-
-    res.status(200).json({ message: `${user.username} is not following ${othUser.username} now` });
-  } catch (err: any) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
-const deleteUser = asyncHandler(async (req: Request, res: Response) => {
-  try {
-    const user = await UserModel.findByIdAndDelete(req.userId);
+    const user = await prisma.user.delete({ where: { id: req.userId } });
 
     if (!user) throw new Error("User not found");
 
-    await tokenService.deleteRefreshToken(user.id);
+    await deleteRefreshToken(user.id);
 
     res
       .status(200)
@@ -137,11 +103,4 @@ const deleteUser = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-export default {
-  registerUser,
-  getProfile,
-  setProfilePicture,
-  followUser,
-  unfollowUser,
-  deleteUser,
-};
+export { registerUser, getProfile, setProfilePicture, deleteUser };

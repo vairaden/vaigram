@@ -1,51 +1,38 @@
 version: "3"
 
-volumes:
-  uploads: {}
-
 services:
-  mongo:
-    image: mongo:6.0.1
-    restart: on-failure
-    env_file:
-      - ./mongo/.env
-    volumes:
-      - ./mongo/initdb.d:/docker-entrypoint-initdb.d
+  traefik:
+    image: traefik
+    command:
+      - --providers.docker
+      - --providers.docker.exposedByDefault=false
+      - --entrypoints.web.address=:80
     ports:
-      - 27017:27017
-  api:
-    depends_on:
-      - mongo
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  db:
+    image: postgres:15
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ./docker/data:/var/lib/postgresql/data
+
+  backend:
     build:
       context: ./api
-      dockerfile: Dockerfile.dev
-    command: sh -c "yarn && yarn dev"
-    volumes:
-       - ./api:/app
-    # depends_on:
-    #   - mongo
-    # build:
-    #   context: ./api
-    #   dockerfile: Dockerfile
-    # volumes:
-    #   - uploads:/uploads
-    # env_file:
-    #   - ./api/.env
-  frontend:
-    depends_on:
-      - api
-    build:
-      context: ./web
       dockerfile: Dockerfile
-    env_file:
-      - ./web/.env.local
-  nginx:
-    depends_on:
-      - api
-      - frontend
     restart: always
-    build:
-      context: ./nginx
-      dockerfile: Dockerfile
-    ports:
-      - 80:80
+    environment:
+      - POSTGRES_SERVER=db
+    depends_on:
+      - db
+    labels:
+      - "traefik.http.routers.backend.rule=Host(`localhost`)"
+      - "traefik.http.services.backend.loadbalancer.server.port=3000"

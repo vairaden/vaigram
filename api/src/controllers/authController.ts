@@ -1,25 +1,24 @@
 import bcrypt from "bcryptjs";
-import asyncHandler from "express-async-handler";
-import { Request, Response } from "express";
+import expressAsyncHandler from "express-async-handler";
 import jwt from "jsonwebtoken";
-import TokenModel from "../models/tokens";
-import tokenService from "../services/tokenService";
-import UserModel from "../models/users";
+import prisma from "../prisma";
+import { deleteRefreshToken, generateTokens, storeRefreshToken } from "../services/tokenService";
 
-require("dotenv").config();
-
-const loginUser = asyncHandler(async (req: Request, res: Response) => {
+const loginUser = expressAsyncHandler(async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = await UserModel.findOne({ username });
-
+    const user = await prisma.user.findFirst({
+      where: {
+        username,
+      },
+    });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new Error("Invalid credentials");
     }
 
-    const { accessToken, refreshToken } = tokenService.generateTokens({ userId: user.id });
-    await tokenService.storeRefreshToken(user.id, refreshToken);
+    const { accessToken, refreshToken } = generateTokens({ userId: user.id });
+    await storeRefreshToken(user.id, refreshToken);
 
     res
       .status(201)
@@ -42,12 +41,12 @@ const loginUser = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-const logoutUser = asyncHandler(async (req: Request, res: Response) => {
+const logoutUser = expressAsyncHandler(async (req, res) => {
   try {
     const { cookies, userId } = req;
     if (!cookies.refreshToken) throw new Error("No cookies");
 
-    await tokenService.deleteRefreshToken(userId!);
+    await deleteRefreshToken(userId!);
 
     res
       .status(200)
@@ -58,26 +57,26 @@ const logoutUser = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-const handleRefreshToken = asyncHandler(async (req: Request, res: Response) => {
+const handleRefreshToken = expressAsyncHandler(async (req, res) => {
   try {
     const { cookies } = req;
 
     if (!cookies.refreshToken) throw new Error("No cookies");
     const { refreshToken } = cookies;
 
-    const data = await TokenModel.findOne({ refreshToken });
+    const data = await prisma.token.findUniqueOrThrow({ where: { refreshToken } });
 
     if (data === null) throw new Error("No user with such cookie");
 
-    const userData = await UserModel.findById(data.userId);
+    const userData = await prisma.user.findUniqueOrThrow({ where: { id: data.userId } });
     if (!userData) throw new Error("User not found");
 
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err: any, payload: any) => {
       if (err || data.userId.toString() !== payload.userId)
         return res.status(401).json({ message: "Token not verified" });
 
-      const newTokens = tokenService.generateTokens({ userId: payload.userId.toString() });
-      await tokenService.storeRefreshToken(payload.userId.toString(), newTokens.refreshToken);
+      const newTokens = generateTokens({ userId: payload.userId.toString() });
+      await storeRefreshToken(payload.userId.toString(), newTokens.refreshToken);
 
       return res
         .status(201)
@@ -101,4 +100,4 @@ const handleRefreshToken = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-export default { handleRefreshToken, loginUser, logoutUser };
+export { handleRefreshToken, loginUser, logoutUser };

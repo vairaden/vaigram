@@ -1,26 +1,22 @@
 import express from "express";
 
-import userController from "../controllers/userController";
 import protect from "../middlewares/authMiddleware";
 import upload from "../middlewares/storageMiddleware";
+import {
+  deleteUser,
+  getProfile,
+  registerUser,
+  setProfilePicture,
+} from "../controllers/userController";
 
-const router = express.Router();
+const userRoutes = express.Router();
 
-router.post("/", userController.registerUser);
+userRoutes.post("/", registerUser);
 
-router.get("/:userId", userController.getProfile);
+userRoutes.get("/:userId", getProfile);
 
-router.post(
-  "/:userId/profile_picture",
-  protect,
-  upload.single("postImage"),
-  userController.setProfilePicture
-);
+userRoutes.post("/:userId/profile_picture", protect, upload.single("postImage"), setProfilePicture);
 
-router.post("/:othUserId/follow", protect, userController.followUser);
+userRoutes.delete("/", protect, deleteUser);
 
-router.post("/:othUserId/unfollow", protect, userController.unfollowUser);
-
-router.delete("/", protect, userController.deleteUser);
-
-export default router;
+export default userRoutes;

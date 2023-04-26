@@ -1,37 +1,13 @@
-export {};
-
-interface IUser {
-  id: string;
-  profilePicture: string | null;
-  username: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  createdAt: Date;
-  accessToken: string;
-}
-
-interface IPost {
-  id: string;
-  author: {
-    id: string;
-    profilePicture: string | null;
-    username: string;
-  };
-  description: string;
-  image: string;
-  likes: number;
-  dislikes: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { IPost, IUser } from "./src/types";
 
 declare global {
   namespace Express {
     interface Request {
-      userId?: string;
-      postId?: string;
-      commentId?: string;
+      userId?: number;
+      // params: {
+      //   postId?: number;
+      //   commentId?: number;
+      // };
     }
 
     interface Response {
@@ -44,7 +20,7 @@ declare global {
     interface ProcessEnv {
       JWT_ACCESS_SECRET: string;
       JWT_REFRESH_SECRET: string;
-      MONGO_URI: string;
+      // MONGO_URI: string;
     }
   }
 }
