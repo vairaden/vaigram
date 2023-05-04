@@ -1,7 +1,7 @@
 import expressAsyncHandler from "express-async-handler";
-import path from "path";
 import fs from "fs/promises";
 import prisma from "../prisma";
+import minio from "../services/minio";
 
 const getMultiplePosts = expressAsyncHandler(async (req, res) => {
   try {
@@ -63,12 +63,16 @@ const getPostById = expressAsyncHandler(async (req, res) => {
 
 const createPost = expressAsyncHandler(async (req, res) => {
   try {
-    if (!req.file) throw new Error("No file attached");
+    if (!req.files) throw new Error("No file attached");
+
+    // minio.fPutObject("vaigram-images", "imageName", req.files[);
+    console.log(req.files);
+
     await prisma.post.create({
       data: {
         authorId: req.userId!,
         description: req.body.description,
-        image: req.file.filename,
+        image: req.files.postImage.name,
       },
     });
     res.status(200).json({
@@ -124,7 +128,7 @@ const deletePostById = expressAsyncHandler(async (req, res) => {
     if (post.author.id !== req.userId) throw new Error("Deletion not authorized");
 
     await prisma.post.delete({ where: { id: post.id } });
-    const filePath = path.join("/uploads", post.image);
+    // const filePath = path.join("/uploads", post.image);
     await fs.unlink(filePath);
 
     await prisma.comment.deleteMany({ where: { id: post.id } });

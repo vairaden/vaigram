@@ -1,7 +1,6 @@
 import express from "express";
 
 import protect from "../middlewares/authMiddleware";
-import upload from "../middlewares/storageMiddleware";
 import {
   createPost,
   deletePostById,
@@ -17,7 +16,7 @@ postRoutes.get("/", getMultiplePosts);
 
 postRoutes.get("/:postId", getPostById);
 
-postRoutes.post("/", protect, upload.single("postImage"), createPost);
+postRoutes.post("/", protect, createPost);
 
 postRoutes.post("/:postId/likes", protect, likePost);
 

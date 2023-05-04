@@ -1,7 +1,6 @@
 import express from "express";
 
 import protect from "../middlewares/authMiddleware";
-import upload from "../middlewares/storageMiddleware";
 import {
   deleteUser,
   getProfile,
@@ -15,7 +14,7 @@ userRoutes.post("/", registerUser);
 
 userRoutes.get("/:userId", getProfile);
 
-userRoutes.post("/:userId/profile_picture", protect, upload.single("postImage"), setProfilePicture);
+userRoutes.post("/:userId/profile_picture", protect, setProfilePicture);
 
 userRoutes.delete("/", protect, deleteUser);
 
